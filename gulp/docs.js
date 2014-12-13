@@ -4,12 +4,13 @@ var runSequence     = require('run-sequence');
 var sass            = require('gulp-sass');
 var serve           = require('gulp-serve');
 var deploy          = require('gulp-gh-pages');
+
 var pack            = require('../package.json');
 
 module.exports = function(gulp) {
 
     gulp.task('docs', function (next) {
-        runSequence(['docs:vendors', 'docs:app', 'docs:css', 'docs:dist'], 'docs:deploy', next);
+        runSequence(['docs:vendors', 'docs:app', 'docs:dist'], 'docs:deploy', next);
     });
     
     // ---------------------------------------------------------
@@ -61,14 +62,6 @@ module.exports = function(gulp) {
         return bundle.bundle()
             .pipe( source('vendors.js') )
             .pipe( gulp.dest("docs/js") );
-    });
-    
-    // ---------------------------------------------------------
-    
-    gulp.task('docs:css', function () {
-        return gulp.src('scss/all.scss')
-            .pipe( sass() )
-            .pipe( gulp.dest('docs/css') );
     });
     
     // ---------------------------------------------------------

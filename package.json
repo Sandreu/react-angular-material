@@ -29,7 +29,6 @@
     "gulp-gh-pages": "^0.4.0",
     "gulp-sass": "^1.2.4",
     "gulp-serve": "^0.3.0",
-    "material-design": "git://github.com/angular/material#v0.6.1",
     "reactify": "^0.17.1",
     "run-sequence": "^1.0.2",
     "vinyl-source-stream": "^1.0.0"

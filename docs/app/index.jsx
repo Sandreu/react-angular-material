@@ -3,10 +3,14 @@
  */
 
 var React = require('react'),
-    ReactMaterial = require('react-md');
+    Md = require('react-md');
 
 React.render(
-    <ReactMaterial.Whiteframe>Hello, world!</ReactMaterial.Whiteframe>,
+    <Md.Toolbar>
+        <h2 className="md-toolbar-tools">
+            <span>Toolbar: light-theme (default)</span>
+        </h2>
+    </Md.Toolbar>,
     document.body
 );
 
