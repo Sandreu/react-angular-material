@@ -68,7 +68,7 @@ module.exports = function(gulp) {
     // ---------------------------------------------------------
     
     gulp.task('docs:deploy', function () {
-        return gulp.src('docs')
+        return gulp.src('./docs/**/*')
             .pipe(deploy());
     });
     
