@@ -5,6 +5,23 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 
 var React = require('react');
 
+var Backdrop = React.createClass({displayName: 'Backdrop',
+    
+    render: function() {
+        return (
+            React.createElement('md-backdrop', {className: 'md-default-theme ' + this.props.className, onClick:this.props.onClick}, this.props.children)
+        );
+    }
+});
+
+module.exports = Backdrop;
+},{"react":"react"}],2:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+
+var React = require('react');
+
 var Content = React.createClass({displayName: 'Content',
     propTypes: {
         padding: React.PropTypes.bool
@@ -29,16 +46,19 @@ var Content = React.createClass({displayName: 'Content',
 });
 
 module.exports = Content;
-},{"react":"react"}],2:[function(require,module,exports){
+},{"react":"react"}],3:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
 
-var React = require('react');
+var React = require('react'),
+    Anim = React.addons.CSSTransitionGroup,
+    Backdrop = require('./backdrop.jsx');
 
 var Sidenav = React.createClass({displayName: 'Sidenav',
   
     propTypes: {
+        backdrop: React.PropTypes.bool,
         openOnStartup: React.PropTypes.bool,
         zDepth: React.PropTypes.number,
         side: function(props, propName, componentName) {
@@ -52,7 +72,8 @@ var Sidenav = React.createClass({displayName: 'Sidenav',
         return {
             side: 'left',
             zDepth: 1,
-            openOnStartup: false
+            openOnStartup: false,
+            backdrop: true
         };
     },
     
@@ -69,20 +90,30 @@ var Sidenav = React.createClass({displayName: 'Sidenav',
     isOpen: function () { return this.state.isOpen(); },
     
     render: function() {
-        var classes = React.addons.classSet({
-            'md-default-theme' : true,
-            'md-sidenav-right' : this.props.side == 'right',
-            'md-sidenav-left' : this.props.side == 'left',
-            
-        });
+        var Bd ='',
+            classes = React.addons.classSet({
+                'md-default-theme' : true,
+                'md-closed' : !this.state.open,
+                'md-sidenav-right' : this.props.side == 'right',
+                'md-sidenav-left' : this.props.side == 'left',
+                
+            });
+        
+        if (this.props.backdrop && this.state.open) Bd = React.createElement(Backdrop, {key: 0, className: "md-sidenav-backdrop md-opaque", onClick: this.close});
+        
         return (
-            React.createElement('md-sidenav', {className: classes + ' md-whiteframe-z' + this.props.zDepth}, this.props.children)
+            React.createElement('div', null,
+                React.createElement(Anim, {transitionName: "ng"}, Bd),
+                React.createElement('md-sidenav', {
+                    className: classes + ' md-whiteframe-z' + this.props.zDepth
+                }, this.props.children)
+            )
         );
     }
 });
 
 module.exports = Sidenav;
-},{"react":"react"}],3:[function(require,module,exports){
+},{"./backdrop.jsx":1,"react":"react"}],4:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -91,16 +122,25 @@ var React = require('react');
 
 var Toolbar = React.createClass({displayName: 'Toolbar',
   
+    propTypes: {
+        zDepth: React.PropTypes.number,
+    },
+    
+    getDefaultProps: function() {
+        return {
+            zDepth: 0,
+        };
+    },
+    
     render: function() {
-        var classNames = 'md-whiteframe-z' + this.props.zDepth;
         return (
-            React.createElement('md-toolbar', {className: 'md-default-theme'}, this.props.children)
+            React.createElement('md-toolbar', {className:  'md-default-theme md-whiteframe-z' + this.props.zDepth}, this.props.children)
         );
     }
 });
 
 module.exports = Toolbar;
-},{"react":"react"}],4:[function(require,module,exports){
+},{"react":"react"}],5:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -131,9 +171,10 @@ var Whiteframe = React.createClass({displayName: 'Whiteframe',
 module.exports = Whiteframe;
 },{"react":"react"}],"react-md":[function(require,module,exports){
 module.exports = {
+    Backdrop: require('./src/backdrop.jsx'),
     Content: require('./src/content.jsx'),
     Sidenav: require('./src/sidenav.jsx'),
     Toolbar: require('./src/toolbar.jsx'),
     Whiteframe: require('./src/whiteframe.jsx'),
 };
-},{"./src/content.jsx":1,"./src/sidenav.jsx":2,"./src/toolbar.jsx":3,"./src/whiteframe.jsx":4}]},{},[]);
+},{"./src/backdrop.jsx":1,"./src/content.jsx":2,"./src/sidenav.jsx":3,"./src/toolbar.jsx":4,"./src/whiteframe.jsx":5}]},{},[]);

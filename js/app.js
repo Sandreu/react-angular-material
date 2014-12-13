@@ -6,28 +6,41 @@
 var React = require('react'),
     Md = require('react-md');
 
-React.render(
-    React.createElement("div", null, 
-        React.createElement(Md.Toolbar, null, 
-            React.createElement("h2", {className: "md-toolbar-tools"}, 
-                React.createElement("span", null, "Toolbar: light-theme (default)")
-            )
-        ), 
-        
-        React.createElement(Md.Sidenav, {side: "left", zDepth: 2}, 
+var Layout = React.createClass({displayName: 'Layout',
+    menu: function () {
+        this.refs.menu.open();
+    },
     
-            React.createElement(Md.Toolbar, null, 
-                React.createElement("h1", {className: "md-toolbar-tools"}, "Sidenav Left")
-            ), 
-            React.createElement(Md.Content, null, 
-                React.createElement("p", null, 
-                "This sidenav is locked open on your device. To go back to the default behavior," + ' ' +
-                "narrow your display."
+    render: function () {
+        
+        return (
+            React.createElement("div", null, 
+                React.createElement(Md.Toolbar, null, 
+                    React.createElement("h2", {className: "md-toolbar-tools", onClick: this.menu}, 
+                        React.createElement("span", null, "React Material Design")
+                    )
+                ), 
+                
+                React.createElement(Md.Sidenav, {ref: "menu", side: "left", zDepth: 2, openOnStartup: true}, 
+            
+                    React.createElement(Md.Toolbar, null, 
+                        React.createElement("h1", {className: "md-toolbar-tools"}, "Sidenav Left")
+                    ), 
+                    React.createElement(Md.Content, null, 
+                        React.createElement("p", null, 
+                        "This sidenav is locked open on your device. To go back to the default behavior," + ' ' +
+                        "narrow your display."
+                        )
+                    )
+            
                 )
             )
-    
-        )
-    ),
+        );
+    }
+});
+
+React.render(
+    React.createElement(Layout, null),
     document.body
 );
 
