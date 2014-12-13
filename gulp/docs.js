@@ -56,8 +56,9 @@ module.exports = function(gulp) {
             key;
         
         for (key in pack.dependencies) {
-            bundle.require(key);
+            if (key !== 'react') bundle.require(key);
         }
+        bundle.require('./node_modules/react/addons.js', { expose: 'react' });
         
         return bundle.bundle()
             .pipe( source('vendors.js') )
@@ -69,6 +70,18 @@ module.exports = function(gulp) {
     gulp.task('docs:deploy', function () {
         return gulp.src('docs')
             .pipe(deploy());
+    });
+    
+    // ---------------------------------------------------------
+    
+    gulp.task('docs:watch', function () {
+        gulp.start('docs:dist');
+        gulp.start('docs:app');
+        
+        gulp.watch(['./src/**/*.jsx'], ['docs:dist']);
+        
+        gulp.watch(['./docs/**/*.jsx'], ['docs:app']);
+        
     });
     
     // ---------------------------------------------------------

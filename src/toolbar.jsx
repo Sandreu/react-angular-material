@@ -4,7 +4,7 @@
 
 var React = require('react');
 
-var Whiteframe = React.createClass({
+var Toolbar = React.createClass({
   
     render: function() {
         var classNames = 'md-whiteframe-z' + this.props.zDepth;
@@ -14,4 +14,4 @@ var Whiteframe = React.createClass({
     }
 });
 
-module.exports = Whiteframe;
+module.exports = Toolbar;
