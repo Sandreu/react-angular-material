@@ -2,11 +2,14 @@
  * @jsx React.DOM
  */
 
-var React = require('react');
+var React = require('react'),
+    Anim = React.addons.CSSTransitionGroup,
+    Backdrop = require('./backdrop.jsx');
 
 var Sidenav = React.createClass({
   
     propTypes: {
+        backdrop: React.PropTypes.bool,
         openOnStartup: React.PropTypes.bool,
         zDepth: React.PropTypes.number,
         side: function(props, propName, componentName) {
@@ -20,7 +23,8 @@ var Sidenav = React.createClass({
         return {
             side: 'left',
             zDepth: 1,
-            openOnStartup: false
+            openOnStartup: false,
+            backdrop: true
         };
     },
     
@@ -37,14 +41,24 @@ var Sidenav = React.createClass({
     isOpen: function () { return this.state.isOpen(); },
     
     render: function() {
-        var classes = React.addons.classSet({
-            'md-default-theme' : true,
-            'md-sidenav-right' : this.props.side == 'right',
-            'md-sidenav-left' : this.props.side == 'left',
-            
-        });
+        var Bd ='',
+            classes = React.addons.classSet({
+                'md-default-theme' : true,
+                'md-closed' : !this.state.open,
+                'md-sidenav-right' : this.props.side == 'right',
+                'md-sidenav-left' : this.props.side == 'left',
+                
+            });
+        
+        if (this.props.backdrop && this.state.open) Bd = <Backdrop key={0} className="md-sidenav-backdrop md-opaque" onClick={this.close} />;
+        
         return (
-            React.createElement('md-sidenav', {className: classes + ' md-whiteframe-z' + this.props.zDepth}, this.props.children)
+            React.createElement('div', null,
+                <Anim transitionName="ng">{Bd}</Anim>,
+                React.createElement('md-sidenav', {
+                    className: classes + ' md-whiteframe-z' + this.props.zDepth
+                }, this.props.children)
+            )
         );
     }
 });

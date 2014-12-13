@@ -18,7 +18,7 @@ var Toolbar = React.createClass({
     
     render: function() {
         return (
-            React.createElement('md-toolbar', {className:  + 'md-default-theme md-whiteframe-z' + this.props.zDepth}, this.props.children)
+            React.createElement('md-toolbar', {className:  'md-default-theme md-whiteframe-z' + this.props.zDepth}, this.props.children)
         );
     }
 });
