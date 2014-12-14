@@ -21,7 +21,7 @@ var Layout = React.createClass({displayName: 'Layout',
                     )
                 ), 
                 
-                React.createElement(Md.Sidenav, {ref: "menu", side: "right", zDepth: 2, openOnStartup: true}, 
+                React.createElement(Md.Sidenav, {ref: "menu", side: "left", zDepth: 2, openOnStartup: true}, 
             
                     React.createElement(Md.Toolbar, null, 
                         React.createElement("h1", {className: "md-toolbar-tools"}, "Sidenav Left")

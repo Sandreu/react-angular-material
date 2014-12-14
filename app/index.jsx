@@ -20,7 +20,7 @@ var Layout = React.createClass({
                     </h2>
                 </Md.Toolbar>
                 
-                <Md.Sidenav ref="menu" side="right" zDepth={2} openOnStartup={true}>
+                <Md.Sidenav ref="menu" side="left" zDepth={2} openOnStartup={true}>
             
                     <Md.Toolbar>
                         <h1 className="md-toolbar-tools">Sidenav Left</h1>
