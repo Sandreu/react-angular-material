@@ -4,10 +4,14 @@
 
 var React = require('react'),
     Anim = React.addons.CSSTransitionGroup,
+    
+    
+    ClassTransitionsMixin = require('./_classTransitions.jsx'),
     Backdrop = require('./backdrop.jsx');
-
+    
 var Sidenav = React.createClass({
-  
+    mixins: [ClassTransitionsMixin],
+    
     propTypes: {
         backdrop: React.PropTypes.bool,
         openOnStartup: React.PropTypes.bool,
@@ -34,17 +38,21 @@ var Sidenav = React.createClass({
         }
     },
     
-    toggle: function () { this.setState({ open: !this.state.open }); },
-    open: function () { this.setState({ open: true }); },
-    close: function () { this.setState({ open: false }); },
+    open: function () {
+        this.setState({ open: true });
+        this.removeClassTransition(this.refs.sidebar.getDOMNode(), 'md-closed');
+    },
+    close: function () {
+        this.setState({ open: false });
+        this.addClassTransition(this.refs.sidebar.getDOMNode(), 'md-closed');
+    },
     
-    isOpen: function () { return this.state.isOpen(); },
+    isOpen: function () { return this.state.open; },
     
     render: function() {
         var Bd ='',
             classes = React.addons.classSet({
                 'md-default-theme' : true,
-                'md-closed' : !this.state.open,
                 'md-sidenav-right' : this.props.side == 'right',
                 'md-sidenav-left' : this.props.side == 'left',
                 
@@ -56,11 +64,12 @@ var Sidenav = React.createClass({
             React.createElement('div', null,
                 <Anim transitionName="ng">{Bd}</Anim>,
                 React.createElement('md-sidenav', {
+                    ref: 'sidebar',
                     className: classes + ' md-whiteframe-z' + this.props.zDepth
                 }, this.props.children)
             )
         );
-    }
+    },
 });
 
 module.exports = Sidenav;
