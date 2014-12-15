@@ -6,8 +6,8 @@ var React = require('react'),
     Anim = React.addons.CSSTransitionGroup,
     
     
-    ClassTransitionsMixin = require('./_classTransitions.jsx'),
-    Backdrop = require('./backdrop.jsx');
+    ClassTransitionsMixin = require('../../mixins/classTransitions.jsx'),
+    Backdrop = require('../backdrop/backdrop.jsx');
     
 var Sidenav = React.createClass({
     mixins: [ClassTransitionsMixin],
