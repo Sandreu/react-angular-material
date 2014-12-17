@@ -1,16 +1,19 @@
 var source          = require('vinyl-source-stream');
 var browserify      = require('browserify');
 var runSequence     = require('run-sequence');
-var sass            = require('gulp-sass');
+// var sass            = require('gulp-sass');
 var serve           = require('gulp-serve');
 var deploy          = require('gulp-gh-pages');
+var fs              = require('fs');
+var through2        = require('through2');
+var path            = require('path');
 
 var pack            = require('../package.json');
 
 module.exports = function(gulp) {
 
     gulp.task('docs', function (next) {
-        runSequence(['docs:vendors', 'docs:app', 'docs:dist'], 'docs:deploy', next);
+        runSequence(['docs:vendors', 'docs:app', 'docs:demo', 'docs:dist'], 'docs:deploy', next);
     });
     
     // ---------------------------------------------------------
@@ -28,7 +31,7 @@ module.exports = function(gulp) {
         
         return bundle.bundle()
             .pipe( source('dist.js') )
-            .pipe( gulp.dest("docs/js") )
+            .pipe( gulp.dest("docs/js") );
     });
     
     // ---------------------------------------------------------
@@ -39,6 +42,8 @@ module.exports = function(gulp) {
         
         bundle.transform('reactify');
         bundle.external('react-md');
+        bundle.external('vendor-exposes');
+        bundle.external('react-md-demo');
         
         for (key in pack.dependencies) {
             bundle.external(key);
@@ -46,7 +51,51 @@ module.exports = function(gulp) {
         
         return bundle.bundle()
             .pipe( source('app.js') )
-            .pipe( gulp.dest("docs/js") )
+            .pipe( gulp.dest("docs/js") );
+    });
+    
+    // ---------------------------------------------------------
+    
+    gulp.task('docs:demo', function (next) {
+        var bundle = browserify(),
+            key;
+        
+        bundle.transform('reactify');
+        bundle.external('react-md');
+        
+        for (key in pack.dependencies) {
+            bundle.external(key);
+        }
+        
+        var demo = [];
+        gulp.src(['./src/**/demo/*.jsx'])
+            .pipe(through2.obj(function (file, enc, cb) {
+                var module = path.basename(file.path, '.jsx');
+                bundle.require(file.path, { expose: 'react-md-demo/' + module });
+                
+                demo.push({
+                    module: module,
+                    source: file.contents.toString()
+                });
+                
+                cb();
+            }, function () {
+                var stream = through2();
+                
+                bundle.require(stream, { expose: 'react-md-demo' });
+                
+                stream.on('end', function () {
+                    bundle.bundle()
+                        .pipe( source('demo.js') )
+                        .pipe( gulp.dest("docs/js") )
+                        .on('end', function () {
+                            next();
+                        });
+                });
+                
+                stream.push('module.exports = ' + JSON.stringify(demo));
+                stream.push(null);
+            }));
     });
     
     // ---------------------------------------------------------
@@ -59,6 +108,7 @@ module.exports = function(gulp) {
             if (key !== 'react') bundle.require(key);
         }
         bundle.require('./node_modules/react/addons.js', { expose: 'react' });
+        bundle.require('./src/vendor-exposes.js', { expose: 'vendor-exposes' });
         
         return bundle.bundle()
             .pipe( source('vendors.js') )
@@ -77,10 +127,13 @@ module.exports = function(gulp) {
     gulp.task('docs:watch', function () {
         gulp.start('docs:dist');
         gulp.start('docs:app');
+        gulp.start('docs:demo');
         
-        gulp.watch(['./src/**/*.jsx'], ['docs:dist']);
+        gulp.watch(['./src/**/*.jsx', '!./src/**/demo/*.jsx'], ['docs:dist']);
         
         gulp.watch(['./docs/**/*.jsx'], ['docs:app']);
+        
+        gulp.watch(['./src/**/demo/*.jsx'], ['docs:demo']);
         
     });
     

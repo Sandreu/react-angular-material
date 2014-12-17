@@ -24,13 +24,15 @@
     "react": "^0.12.1"
   },
   "devDependencies": {
-    "browserify": "^7.0.0",
+    "browserify": "^7.0.2",
     "gulp": "^3.8.10",
     "gulp-gh-pages": "^0.4.0",
     "gulp-sass": "^1.2.4",
     "gulp-serve": "^0.3.0",
+    "react-router": "^0.11.5",
     "reactify": "^0.17.1",
     "run-sequence": "^1.0.2",
+    "through2": "^0.6.3",
     "vinyl-source-stream": "^1.0.0"
   }
 }

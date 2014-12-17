@@ -14,6 +14,7 @@ var Sidenav = React.createClass({
     
     propTypes: {
         backdrop: React.PropTypes.bool,
+        lockOpen: React.PropTypes.bool,
         openOnStartup: React.PropTypes.bool,
         zDepth: React.PropTypes.number,
         side: function(props, propName, componentName) {
@@ -26,6 +27,7 @@ var Sidenav = React.createClass({
     getDefaultProps: function() {
         return {
             side: 'left',
+            lockOpen: false,
             zDepth: 1,
             openOnStartup: false,
             backdrop: true
@@ -40,35 +42,45 @@ var Sidenav = React.createClass({
     
     open: function () {
         this.setState({ open: true });
-        this.removeClassTransition(this.refs.sidebar.getDOMNode(), 'md-closed');
+        this.removeClassTransition(this.refs.sidenav.getDOMNode(), 'md-closed');
     },
     close: function () {
         this.setState({ open: false });
-        this.addClassTransition(this.refs.sidebar.getDOMNode(), 'md-closed');
+        this.addClassTransition(this.refs.sidenav.getDOMNode(), 'md-closed');
     },
     
     isOpen: function () { return this.state.open; },
     
     render: function() {
-        var Bd ='',
-            classes = React.addons.classSet({
+        var out,
+            sidenav_classes = React.addons.classSet({
                 'md-default-theme' : true,
+                'md-closed' : !this.props.open,
                 'md-sidenav-right' : this.props.side == 'right',
                 'md-sidenav-left' : this.props.side == 'left',
-                
-            });
-        
-        if (this.props.backdrop && this.state.open) Bd = <Backdrop key={0} className="md-sidenav-backdrop md-opaque" onClick={this.close} />;
-        
-        return (
-            React.createElement('div', null,
+                'md-locked-open' : this.props.lockOpen
+            }),
+            sidenav = React.createElement('md-sidenav', {
+                ref: 'sidenav',
+                className: sidenav_classes + ' md-whiteframe-z' + this.props.zDepth
+            }, this.props.children);
+            
+        if (this.props.lockOpen) {
+            out = sidenav;
+        } else {
+            var Bd = null;
+            
+            if (this.props.backdrop && this.state.open) {
+                Bd = <Backdrop key={0} className="md-sidenav-backdrop md-opaque" onClick={this.close} />;
+            }
+            
+            out = React.createElement('div', null,
                 <Anim transitionName="ng">{Bd}</Anim>,
-                React.createElement('md-sidenav', {
-                    ref: 'sidebar',
-                    className: classes + ' md-whiteframe-z' + this.props.zDepth
-                }, this.props.children)
+                sidenav
             )
-        );
+        }
+        
+        return out;
     },
 });
 

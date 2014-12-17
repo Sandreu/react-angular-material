@@ -11,14 +11,14 @@ var Whiteframe = React.createClass({
     
     getDefaultProps: function() {
         return {
-            zDepth: 1
+            zDepth: 1,
+            className: ''
         };
     },
   
     render: function() {
-        var classNames = 'md-whiteframe-z' + this.props.zDepth;
         return (
-            <div className={classNames}>
+            <div {...this.props} className={this.props.className +  ' md-whiteframe-z' + this.props.zDepth}>
                 {this.props.children}
             </div>
         );
