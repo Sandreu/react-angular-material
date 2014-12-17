@@ -20007,4 +20007,8 @@ module.exports = warning;
 },{"./emptyFunction":122,"_process":1}],"react":[function(require,module,exports){
 module.exports = require('./lib/ReactWithAddons');
 
-},{"./lib/ReactWithAddons":92}]},{},[]);
+},{"./lib/ReactWithAddons":92}],"vendor-exposes":[function(require,module,exports){
+module.exports = {
+    HTMLDOMPropertyConfig: require('react/lib/HTMLDOMPropertyConfig.js')
+}
+},{"react/lib/HTMLDOMPropertyConfig.js":24}]},{},[]);

@@ -921,6 +921,253 @@ module.exports = warning;
 }).call(this,require('_process'))
 },{"./emptyFunction":9,"_process":1}],13:[function(require,module,exports){
 /**
+ * @jsx React.DOM
+ */
+
+var React = require('react');
+
+var Backdrop = React.createClass({displayName: 'Backdrop',
+    
+    render: function() {
+        return (
+            React.createElement('md-backdrop', {className: 'md-default-theme ' + this.props.className, onClick:this.props.onClick}, this.props.children)
+        );
+    }
+});
+
+module.exports = Backdrop;
+},{"react":"react"}],14:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+
+var React = require('react');
+
+var Content = React.createClass({displayName: 'Content',
+    propTypes: {
+        padding: React.PropTypes.bool,
+        className: React.PropTypes.string
+    },
+    
+    getDefaultProps: function() {
+        return {
+            padding: false,
+            className: ''
+        };
+    },
+  
+    render: function() {
+        var classes = React.addons.classSet({
+            'md-default-theme' : true,
+            'md-padding' : this.props.padding
+        });
+        var attributes = React.__spread({}, this.props, { className: classes });
+        delete attributes.padding;
+        delete attributes.children;
+        attributes.className += ' ' + classes;
+        
+        return (
+            React.createElement('md-content', attributes, this.props.children)
+        );
+    }
+});
+
+module.exports = Content;
+},{"react":"react"}],15:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+
+var React = require('react');
+
+var ListItem = React.createClass({displayName: 'ListItem',
+    getDefaultProps: function() {
+        return {
+            className: '',
+            divider: true
+        };
+    },
+    
+    render: function() {
+        return (
+            React.createElement('md-item', {className: this.props.className}, 
+                React.createElement('md-item-content', {}, this.props.children),
+                this.props.divider ? React.createElement('md-divider', {className: 'md-default-theme'}) : null
+            )
+        );
+    }
+});
+
+module.exports = ListItem;
+},{"react":"react"}],16:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+
+var React = require('react');
+
+var List = React.createClass({displayName: 'List',
+    getDefaultProps: function() {
+        return {
+            className: ''
+        };
+    },
+    
+    render: function() {
+        return (
+            React.createElement('md-list', {className: this.props.className}, this.props.children
+            )
+        );
+    }
+});
+
+module.exports = List;
+},{"react":"react"}],17:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+
+var React = require('react'),
+    Anim = React.addons.CSSTransitionGroup,
+    
+    
+    ClassTransitionsMixin = require('../../mixins/classTransitions.jsx'),
+    Backdrop = require('../backdrop/backdrop.jsx');
+    
+var Sidenav = React.createClass({displayName: 'Sidenav',
+    mixins: [ClassTransitionsMixin],
+    
+    propTypes: {
+        backdrop: React.PropTypes.bool,
+        lockOpen: React.PropTypes.bool,
+        openOnStartup: React.PropTypes.bool,
+        zDepth: React.PropTypes.number,
+        side: function(props, propName, componentName) {
+            if (!/left|right/.test(props[propName])) {
+                return new Error('Nav side is left or right only !');
+            }
+        }
+    },
+    
+    getDefaultProps: function() {
+        return {
+            side: 'left',
+            lockOpen: false,
+            zDepth: 1,
+            openOnStartup: false,
+            backdrop: true
+        };
+    },
+    
+    getInitialState: function () {
+        return {
+            open : this.props.openOnStartup
+        }
+    },
+    
+    open: function () {
+        this.setState({ open: true });
+        this.removeClassTransition(this.refs.sidenav.getDOMNode(), 'md-closed');
+    },
+    close: function () {
+        this.setState({ open: false });
+        this.addClassTransition(this.refs.sidenav.getDOMNode(), 'md-closed');
+    },
+    
+    isOpen: function () { return this.state.open; },
+    
+    render: function() {
+        var out,
+            sidenav_classes = React.addons.classSet({
+                'md-default-theme' : true,
+                'md-closed' : !this.props.open,
+                'md-sidenav-right' : this.props.side == 'right',
+                'md-sidenav-left' : this.props.side == 'left',
+                'md-locked-open' : this.props.lockOpen
+            }),
+            sidenav = React.createElement('md-sidenav', {
+                ref: 'sidenav',
+                className: sidenav_classes + ' md-whiteframe-z' + this.props.zDepth
+            }, this.props.children);
+            
+        if (this.props.lockOpen) {
+            out = sidenav;
+        } else {
+            var Bd = null;
+            
+            if (this.props.backdrop && this.state.open) {
+                Bd = React.createElement(Backdrop, {key: 0, className: "md-sidenav-backdrop md-opaque", onClick: this.close});
+            }
+            
+            out = React.createElement('div', null,
+                React.createElement(Anim, {transitionName: "ng"}, Bd),
+                sidenav
+            )
+        }
+        
+        return out;
+    },
+});
+
+module.exports = Sidenav;
+},{"../../mixins/classTransitions.jsx":20,"../backdrop/backdrop.jsx":13,"react":"react"}],18:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+
+var React = require('react');
+
+var Toolbar = React.createClass({displayName: 'Toolbar',
+  
+    propTypes: {
+        zDepth: React.PropTypes.number,
+    },
+    
+    getDefaultProps: function() {
+        return {
+            zDepth: 0,
+        };
+    },
+    
+    render: function() {
+        return (
+            React.createElement('md-toolbar', {className:  'md-default-theme md-whiteframe-z' + this.props.zDepth}, this.props.children)
+        );
+    }
+});
+
+module.exports = Toolbar;
+},{"react":"react"}],19:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+
+var React = require('react');
+
+var Whiteframe = React.createClass({displayName: 'Whiteframe',
+    propTypes: {
+        zDepth: React.PropTypes.number
+    },
+    
+    getDefaultProps: function() {
+        return {
+            zDepth: 1,
+            className: ''
+        };
+    },
+  
+    render: function() {
+        return (
+            React.createElement("div", React.__spread({},  this.props, {className: this.props.className +  ' md-whiteframe-z' + this.props.zDepth}), 
+                this.props.children
+            )
+        );
+    }
+});
+
+module.exports = Whiteframe;
+},{"react":"react"}],20:[function(require,module,exports){
+/**
  * This code is deeply inspired from the ReactCSSTransitionGroupChild from 
  * https://github.com/facebook/react
  * 
@@ -1011,192 +1258,14 @@ var ClassTransitions = {
 };
 
 module.exports = ClassTransitions;
-},{"react":"react","react/lib/CSSCore":2,"react/lib/ReactTransitionEvents":8,"react/lib/onlyChild":11}],14:[function(require,module,exports){
-/**
- * @jsx React.DOM
- */
-
-var React = require('react');
-
-var Backdrop = React.createClass({displayName: 'Backdrop',
-    
-    render: function() {
-        return (
-            React.createElement('md-backdrop', {className: 'md-default-theme ' + this.props.className, onClick:this.props.onClick}, this.props.children)
-        );
-    }
-});
-
-module.exports = Backdrop;
-},{"react":"react"}],15:[function(require,module,exports){
-/**
- * @jsx React.DOM
- */
-
-var React = require('react');
-
-var Content = React.createClass({displayName: 'Content',
-    propTypes: {
-        padding: React.PropTypes.bool
-    },
-    
-    getDefaultProps: function() {
-        return {
-            padding: true
-        };
-    },
-  
-    render: function() {
-        var classes = React.addons.classSet({
-            'md-default-theme' : true,
-            'md-padding' : this.props.padding
-        })
-        
-        return (
-            React.createElement('md-content', { className: classes }, this.props.children)
-        );
-    }
-});
-
-module.exports = Content;
-},{"react":"react"}],16:[function(require,module,exports){
-/**
- * @jsx React.DOM
- */
-
-var React = require('react'),
-    Anim = React.addons.CSSTransitionGroup,
-    
-    
-    ClassTransitionsMixin = require('./_classTransitions.jsx'),
-    Backdrop = require('./backdrop.jsx');
-    
-var Sidenav = React.createClass({displayName: 'Sidenav',
-    mixins: [ClassTransitionsMixin],
-    
-    propTypes: {
-        backdrop: React.PropTypes.bool,
-        openOnStartup: React.PropTypes.bool,
-        zDepth: React.PropTypes.number,
-        side: function(props, propName, componentName) {
-            if (!/left|right/.test(props[propName])) {
-                return new Error('Nav side is left or right only !');
-            }
-        }
-    },
-    
-    getDefaultProps: function() {
-        return {
-            side: 'left',
-            zDepth: 1,
-            openOnStartup: false,
-            backdrop: true
-        };
-    },
-    
-    getInitialState: function () {
-        return {
-            open : this.props.openOnStartup
-        }
-    },
-    
-    open: function () {
-        this.setState({ open: true });
-        this.removeClassTransition(this.refs.sidebar.getDOMNode(), 'md-closed');
-    },
-    close: function () {
-        this.setState({ open: false });
-        this.addClassTransition(this.refs.sidebar.getDOMNode(), 'md-closed');
-    },
-    
-    isOpen: function () { return this.state.open; },
-    
-    render: function() {
-        var Bd ='',
-            classes = React.addons.classSet({
-                'md-default-theme' : true,
-                'md-sidenav-right' : this.props.side == 'right',
-                'md-sidenav-left' : this.props.side == 'left',
-                
-            });
-        
-        if (this.props.backdrop && this.state.open) Bd = React.createElement(Backdrop, {key: 0, className: "md-sidenav-backdrop md-opaque", onClick: this.close});
-        
-        return (
-            React.createElement('div', null,
-                React.createElement(Anim, {transitionName: "ng"}, Bd),
-                React.createElement('md-sidenav', {
-                    ref: 'sidebar',
-                    className: classes + ' md-whiteframe-z' + this.props.zDepth
-                }, this.props.children)
-            )
-        );
-    },
-});
-
-module.exports = Sidenav;
-},{"./_classTransitions.jsx":13,"./backdrop.jsx":14,"react":"react"}],17:[function(require,module,exports){
-/**
- * @jsx React.DOM
- */
-
-var React = require('react');
-
-var Toolbar = React.createClass({displayName: 'Toolbar',
-  
-    propTypes: {
-        zDepth: React.PropTypes.number,
-    },
-    
-    getDefaultProps: function() {
-        return {
-            zDepth: 0,
-        };
-    },
-    
-    render: function() {
-        return (
-            React.createElement('md-toolbar', {className:  'md-default-theme md-whiteframe-z' + this.props.zDepth}, this.props.children)
-        );
-    }
-});
-
-module.exports = Toolbar;
-},{"react":"react"}],18:[function(require,module,exports){
-/**
- * @jsx React.DOM
- */
-
-var React = require('react');
-
-var Whiteframe = React.createClass({displayName: 'Whiteframe',
-    propTypes: {
-        zDepth: React.PropTypes.number
-    },
-    
-    getDefaultProps: function() {
-        return {
-            zDepth: 1
-        };
-    },
-  
-    render: function() {
-        var classNames = 'md-whiteframe-z' + this.props.zDepth;
-        return (
-            React.createElement("div", {className: classNames}, 
-                this.props.children
-            )
-        );
-    }
-});
-
-module.exports = Whiteframe;
-},{"react":"react"}],"react-md":[function(require,module,exports){
+},{"react":"react","react/lib/CSSCore":2,"react/lib/ReactTransitionEvents":8,"react/lib/onlyChild":11}],"react-md":[function(require,module,exports){
 module.exports = {
-    Backdrop: require('./src/backdrop.jsx'),
-    Content: require('./src/content.jsx'),
-    Sidenav: require('./src/sidenav.jsx'),
-    Toolbar: require('./src/toolbar.jsx'),
-    Whiteframe: require('./src/whiteframe.jsx'),
+    Backdrop        : require('./src/components/backdrop/backdrop.jsx'),
+    Content         : require('./src/components/content/content.jsx'),
+    List            : require('./src/components/list/list.jsx'),
+    ListItem        : require('./src/components/list-item/list-item.jsx'),
+    Sidenav         : require('./src/components/sidenav/sidenav.jsx'),
+    Toolbar         : require('./src/components/toolbar/toolbar.jsx'),
+    Whiteframe      : require('./src/components/whiteframe/whiteframe.jsx'),
 };
-},{"./src/backdrop.jsx":14,"./src/content.jsx":15,"./src/sidenav.jsx":16,"./src/toolbar.jsx":17,"./src/whiteframe.jsx":18}]},{},[]);
+},{"./src/components/backdrop/backdrop.jsx":13,"./src/components/content/content.jsx":14,"./src/components/list-item/list-item.jsx":15,"./src/components/list/list.jsx":16,"./src/components/sidenav/sidenav.jsx":17,"./src/components/toolbar/toolbar.jsx":18,"./src/components/whiteframe/whiteframe.jsx":19}]},{},[]);

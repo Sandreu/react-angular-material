@@ -1,47 +1,47 @@
 /**
  * @jsx React.DOM
  */
+ 
+var DOMProps = require('vendor-exposes').HTMLDOMPropertyConfig;
+    
+DOMProps.Properties.layout = null;
+DOMProps.Properties['layoutPadding'] = null;
+DOMProps.DOMAttributeNames['layoutPadding'] = 'layout-padding';
+DOMProps.Properties['layoutMargin'] = null;
+DOMProps.DOMAttributeNames['layoutMargin'] = 'layout-margin';
+DOMProps.Properties['layoutWrap'] = null;
+DOMProps.DOMAttributeNames['layoutWrap'] = 'layout-wrap';
+DOMProps.Properties['layoutFill'] = null;
+DOMProps.DOMAttributeNames['layoutFill'] = 'layout-fill';
+DOMProps.Properties['layoutAlign'] = null;
+DOMProps.DOMAttributeNames['layoutAlign'] = 'layout-align';
+DOMProps.Properties['flexOrder'] = null;
+DOMProps.DOMAttributeNames['flexOrder'] = 'flex-order';
+
 
 var React = require('react'),
-    Md = require('react-md');
+    Router = require('react-router'),
+    Md = require('react-md'),
+    Layout = require('./layout.jsx'),
+    Route = Router.Route,
+    demos = require('react-md-demo');
 
-var Layout = React.createClass({
-    menu: function () {
-        this.refs.menu.open();
-    },
-    
-    render: function () {
-        
-        return (
-            <div>
-                <Md.Toolbar>
-                    <h2 className="md-toolbar-tools" onClick={this.menu}>
-                        <span>React Material Design</span>
-                    </h2>
-                </Md.Toolbar>
-                
-                <Md.Sidenav ref="menu" side="left" zDepth={2} openOnStartup={true}>
-            
-                    <Md.Toolbar>
-                        <h1 className="md-toolbar-tools">Sidenav Left</h1>
-                    </Md.Toolbar>
-                    <Md.Content>
-                        <p>
-                        This sidenav is locked open on your device. To go back to the default behavior,
-                        narrow your display.
-                        </p>
-                    </Md.Content>
-            
-                </Md.Sidenav>
-            </div>
-        );
-    }
+
+var components_demo = demos.map(function (item, i) {
+    return <Route key={i} name={'Components.' + item.module} handler={require('react-md-demo/' + item.module)} />
 });
 
-React.render(
-    <Layout />,
-    document.body
+
+var routes = (
+    <Route handler={Layout} path="/">
+        {components_demo}
+        <Router.DefaultRoute handler={require('react-md-demo/' + demos[0].module)} />
+    </Route>
 );
+
+Router.run(routes, function (Handler) {
+    React.render(<Handler/>, document.body);
+});
 
 //Needed for React Developer Tools
 window.React = React;
