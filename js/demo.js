@@ -3,6 +3,10 @@ var React = require('react'),
     Md = require('react-md');
     
 var SidenavDemo = React.createClass({displayName: 'SidenavDemo',
+    menu: function () {
+        this.refs.menu.open();
+    },
+    
     render: function () {
         return (
             React.createElement("div", null, 
@@ -38,5 +42,5 @@ var SidenavDemo = React.createClass({displayName: 'SidenavDemo',
 
 module.exports = SidenavDemo;
 },{"react":"react","react-md":"react-md"}],"react-md-demo":[function(require,module,exports){
-module.exports = [{"module":"Sidenav","source":"var React = require('react'),\n    Md = require('react-md');\n    \nvar SidenavDemo = React.createClass({\n    render: function () {\n        return (\n            <div>\n                <p onClick={this.menu}>\n                    Click To Open sidenav\n                </p>\n                <Md.Sidenav ref=\"menu\" side=\"right\">\n                    <Md.List>\n                        <Md.ListItem>\n                            <div className=\"md-tile-content\">\n                                <h3>Title 1</h3>\n                                <h4>Title 2</h4>\n                                <p>\n                                    Notes list\n                                </p>\n                            </div>\n                        </Md.ListItem>\n                        <Md.ListItem>\n                            <div className=\"md-tile-content\">\n                                <h3>Title 1</h3>\n                                <h4>Title 2</h4>\n                                <p>\n                                    Notes list\n                                </p>\n                            </div>\n                        </Md.ListItem>\n                    </Md.List>\n                </Md.Sidenav>\n            </div>\n        );\n    }\n});\n\nmodule.exports = SidenavDemo;"}]
+module.exports = [{"module":"Sidenav","source":"var React = require('react'),\n    Md = require('react-md');\n    \nvar SidenavDemo = React.createClass({\n    menu: function () {\n        this.refs.menu.open();\n    },\n    \n    render: function () {\n        return (\n            <div>\n                <p onClick={this.menu}>\n                    Click To Open sidenav\n                </p>\n                <Md.Sidenav ref=\"menu\" side=\"right\">\n                    <Md.List>\n                        <Md.ListItem>\n                            <div className=\"md-tile-content\">\n                                <h3>Title 1</h3>\n                                <h4>Title 2</h4>\n                                <p>\n                                    Notes list\n                                </p>\n                            </div>\n                        </Md.ListItem>\n                        <Md.ListItem>\n                            <div className=\"md-tile-content\">\n                                <h3>Title 1</h3>\n                                <h4>Title 2</h4>\n                                <p>\n                                    Notes list\n                                </p>\n                            </div>\n                        </Md.ListItem>\n                    </Md.List>\n                </Md.Sidenav>\n            </div>\n        );\n    }\n});\n\nmodule.exports = SidenavDemo;"}]
 },{}]},{},[]);

@@ -58,10 +58,6 @@ var React = require('react'),
     Md = require('react-md');
 
 var Layout = React.createClass({displayName: 'Layout',
-    menu: function () {
-        this.refs.menu.open();
-    },
-    
     render: function () {
         
         return (
