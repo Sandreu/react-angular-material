@@ -941,6 +941,59 @@ module.exports = Backdrop;
  * @jsx React.DOM
  */
 
+var React = require('react'),
+    Md = require('react-md');
+    
+var Button = React.createClass({displayName: 'Button',
+    
+    propTypes: {
+        className: React.PropTypes.string,
+        primary: React.PropTypes.bool,
+        warn: React.PropTypes.bool,
+        decorator: React.PropTypes.string,
+    },
+    
+    getDefaultProps: function() {
+        return {
+            className: '',
+            onClick: function () {},
+            primary: false,
+            warn: false,
+            decorator: '',
+        };
+    },
+    
+    render: function () {
+        var classes = React.addons.classSet({
+            'md-default-theme' : true,
+            'md-button' : true,
+            'md-primary' : this.props.primary && !this.props.warn,
+            'md-warn' : this.props.warn,
+            'md-raised' : this.props.decorator==='raised',
+            'md-fab' : this.props.decorator==='fab'
+        });
+        
+        classes += ' ' + this.props.className;
+        
+        return (
+            React.createElement("button", React.__spread({},  this.props, {className: classes, onClick: this._click}), 
+                this.props.children
+            )
+        );
+    },
+    
+    _click: function () {
+        if (!this.props.disabled) this.props.onClick.apply();
+    },
+    
+});
+
+module.exports = Button;
+},{"react":"react","react-md":"react-md"}],15:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+
 var React = require('react');
 
 var Content = React.createClass({displayName: 'Content',
@@ -961,10 +1014,8 @@ var Content = React.createClass({displayName: 'Content',
             'md-default-theme' : true,
             'md-padding' : this.props.padding
         });
+        classes += ' ' + this.props.className;
         var attributes = React.__spread({}, this.props, { className: classes });
-        delete attributes.padding;
-        delete attributes.children;
-        attributes.className += ' ' + classes;
         
         return (
             React.createElement('md-content', attributes, this.props.children)
@@ -973,7 +1024,7 @@ var Content = React.createClass({displayName: 'Content',
 });
 
 module.exports = Content;
-},{"react":"react"}],15:[function(require,module,exports){
+},{"react":"react"}],16:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -999,7 +1050,7 @@ var ListItem = React.createClass({displayName: 'ListItem',
 });
 
 module.exports = ListItem;
-},{"react":"react"}],16:[function(require,module,exports){
+},{"react":"react"}],17:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -1022,7 +1073,7 @@ var List = React.createClass({displayName: 'List',
 });
 
 module.exports = List;
-},{"react":"react"}],17:[function(require,module,exports){
+},{"react":"react"}],18:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -1085,10 +1136,10 @@ var Sidenav = React.createClass({displayName: 'Sidenav',
                 'md-sidenav-left' : this.props.side == 'left',
                 'md-locked-open' : this.props.lockOpen
             }),
-            sidenav = React.createElement('md-sidenav', {
+            sidenav = React.createElement('md-sidenav', React.__spread({}, this.props, {
                 ref: 'sidenav',
                 className: sidenav_classes + ' md-whiteframe-z' + this.props.zDepth
-            }, this.props.children);
+            }), this.props.children);
             
         if (this.props.lockOpen) {
             out = sidenav;
@@ -1110,7 +1161,7 @@ var Sidenav = React.createClass({displayName: 'Sidenav',
 });
 
 module.exports = Sidenav;
-},{"../../mixins/classTransitions.jsx":20,"../backdrop/backdrop.jsx":13,"react":"react"}],18:[function(require,module,exports){
+},{"../../mixins/classTransitions.jsx":21,"../backdrop/backdrop.jsx":13,"react":"react"}],19:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -1126,18 +1177,23 @@ var Toolbar = React.createClass({displayName: 'Toolbar',
     getDefaultProps: function() {
         return {
             zDepth: 0,
+            className: ''
         };
     },
     
     render: function() {
+        var classes = React.addons.classSet({
+            'md-default-theme' : true,
+        });
+        classes += ' md-whiteframe-z' + this.props.zDepth + ' ' + this.props.className;
         return (
-            React.createElement('md-toolbar', {className:  'md-default-theme md-whiteframe-z' + this.props.zDepth}, this.props.children)
+            React.createElement('md-toolbar', React.__spread({}, this.props, {className:  classes}), this.props.children)
         );
     }
 });
 
 module.exports = Toolbar;
-},{"react":"react"}],19:[function(require,module,exports){
+},{"react":"react"}],20:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -1166,7 +1222,7 @@ var Whiteframe = React.createClass({displayName: 'Whiteframe',
 });
 
 module.exports = Whiteframe;
-},{"react":"react"}],20:[function(require,module,exports){
+},{"react":"react"}],21:[function(require,module,exports){
 /**
  * This code is deeply inspired from the ReactCSSTransitionGroupChild from 
  * https://github.com/facebook/react
@@ -1261,6 +1317,7 @@ module.exports = ClassTransitions;
 },{"react":"react","react/lib/CSSCore":2,"react/lib/ReactTransitionEvents":8,"react/lib/onlyChild":11}],"react-md":[function(require,module,exports){
 module.exports = {
     Backdrop        : require('./src/components/backdrop/backdrop.jsx'),
+    Button          : require('./src/components/button/button.jsx'),
     Content         : require('./src/components/content/content.jsx'),
     List            : require('./src/components/list/list.jsx'),
     ListItem        : require('./src/components/list-item/list-item.jsx'),
@@ -1268,4 +1325,4 @@ module.exports = {
     Toolbar         : require('./src/components/toolbar/toolbar.jsx'),
     Whiteframe      : require('./src/components/whiteframe/whiteframe.jsx'),
 };
-},{"./src/components/backdrop/backdrop.jsx":13,"./src/components/content/content.jsx":14,"./src/components/list-item/list-item.jsx":15,"./src/components/list/list.jsx":16,"./src/components/sidenav/sidenav.jsx":17,"./src/components/toolbar/toolbar.jsx":18,"./src/components/whiteframe/whiteframe.jsx":19}]},{},[]);
+},{"./src/components/backdrop/backdrop.jsx":13,"./src/components/button/button.jsx":14,"./src/components/content/content.jsx":15,"./src/components/list-item/list-item.jsx":16,"./src/components/list/list.jsx":17,"./src/components/sidenav/sidenav.jsx":18,"./src/components/toolbar/toolbar.jsx":19,"./src/components/whiteframe/whiteframe.jsx":20}]},{},[]);

@@ -6,6 +6,7 @@
 var DOMProps = require('vendor-exposes').HTMLDOMPropertyConfig;
     
 DOMProps.Properties.layout = null;
+DOMProps.Properties.flex = null;
 DOMProps.Properties['layoutPadding'] = null;
 DOMProps.DOMAttributeNames['layoutPadding'] = 'layout-padding';
 DOMProps.Properties['layoutMargin'] = null;
@@ -54,46 +55,44 @@ window.React = React;
  */
  
 var React = require('react'),
-    RouteHandler = require('react-router').RouteHandler,
-    Md = require('react-md');
+    Router = require('react-router'),
+    RouteHandler = Router.RouteHandler,
+    Md = require('react-md')
+    Demo = require('react-md-demo');
 
 var Layout = React.createClass({displayName: 'Layout',
+    mixins: [Router.Navigation],
+    
     render: function () {
-        
+        var Menu = Demo.map(function (item) {
+            return React.createElement("a", {href: this.makeHref('Components.' + item.module), className: "menu-item"}, item.module)
+        }.bind(this));
         return (
-            React.createElement("div", {layout: "row", style: {height:'100%'}}, 
-            
-                React.createElement(Md.Sidenav, {lockOpen: true, zDepth: 2, openOnStartup: true}, 
-            
-                    React.createElement(Md.Toolbar, null, 
-                        React.createElement("h1", {className: "md-toolbar-tools"}, "Sidenav Left")
-                    ), 
-                    React.createElement(Md.Content, null, 
-                        React.createElement("a", {className: "menu-item"}, "Sidenav"), 
-                        React.createElement("a", {className: "menu-item"}, "Toolbar")
-                    )
-            
+            React.createElement("div", {layout: "column"}, 
+                React.createElement(Md.Toolbar, {className: "md-tall", zDepth: 2, style: {zIndex:1}}, 
+                    React.createElement("span", {flex: true}), 
+                    React.createElement("h1", {className: "md-toolbar-tools md-toolbar-tools-bottom"}, "React MD")
                 ), 
-                
-                React.createElement(Md.Content, {layoutFill: true}, 
-                    React.createElement(Md.Toolbar, null, 
-                        React.createElement("h2", {className: "md-toolbar-tools"}, 
-                            React.createElement("span", null, "React Material Design")
+                React.createElement("div", {layoutFill: true, layout: "row", style: {height:'100%'}}, 
+                    React.createElement(Md.Sidenav, {lockOpen: true, zDepth: 0, style: {zIndex:0}}, 
+                        React.createElement(Md.Content, null, 
+                            Menu
                         )
                     ), 
                     
-                    React.createElement(Md.Content, {padding: true, layout: "column"}, 
-                        React.createElement(Md.Whiteframe, {className: "demo-container", layoutFill: true}, 
+                    React.createElement(Md.Whiteframe, {layoutFill: true, className: "demo-container", style: {margin:'-85px 0 20px 0', zIndex:2}}, 
+                        React.createElement(Md.Content, {layout: "column"}, 
                             React.createElement(Md.Toolbar, null, 
                                 React.createElement("h2", {className: "md-toolbar-tools"}, 
-                                    React.createElement("span", null, "React Material Design")
+                                    React.createElement("span", null, "Title")
                                 )
                             ), 
                             React.createElement(Md.Content, {padding: true, style: { overflow: 'hidden', minHeight: '300px'}}, 
                                 React.createElement(RouteHandler, null)
                             )
                         )
-                    )
+                    ), 
+                    React.createElement("div", {style: {width: '100px'}})
                 )
             )
         );
@@ -102,7 +101,7 @@ var Layout = React.createClass({displayName: 'Layout',
 
 
 module.exports = Layout;
-},{"react":"react","react-md":"react-md","react-router":17}],3:[function(require,module,exports){
+},{"react":"react","react-md":"react-md","react-md-demo":"react-md-demo","react-router":17}],3:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
