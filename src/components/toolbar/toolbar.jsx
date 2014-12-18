@@ -13,12 +13,17 @@ var Toolbar = React.createClass({
     getDefaultProps: function() {
         return {
             zDepth: 0,
+            className: ''
         };
     },
     
     render: function() {
+        var classes = React.addons.classSet({
+            'md-default-theme' : true,
+        });
+        classes += ' md-whiteframe-z' + this.props.zDepth + ' ' + this.props.className;
         return (
-            React.createElement('md-toolbar', {className:  'md-default-theme md-whiteframe-z' + this.props.zDepth}, this.props.children)
+            React.createElement('md-toolbar', React.__spread({}, this.props, {className:  classes}), this.props.children)
         );
     }
 });

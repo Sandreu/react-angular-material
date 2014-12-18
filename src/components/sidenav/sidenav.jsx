@@ -60,10 +60,10 @@ var Sidenav = React.createClass({
                 'md-sidenav-left' : this.props.side == 'left',
                 'md-locked-open' : this.props.lockOpen
             }),
-            sidenav = React.createElement('md-sidenav', {
+            sidenav = React.createElement('md-sidenav', React.__spread({}, this.props, {
                 ref: 'sidenav',
                 className: sidenav_classes + ' md-whiteframe-z' + this.props.zDepth
-            }, this.props.children);
+            }), this.props.children);
             
         if (this.props.lockOpen) {
             out = sidenav;

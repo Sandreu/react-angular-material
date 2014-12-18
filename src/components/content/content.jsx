@@ -22,10 +22,8 @@ var Content = React.createClass({
             'md-default-theme' : true,
             'md-padding' : this.props.padding
         });
+        classes += ' ' + this.props.className;
         var attributes = React.__spread({}, this.props, { className: classes });
-        delete attributes.padding;
-        delete attributes.children;
-        attributes.className += ' ' + classes;
         
         return (
             React.createElement('md-content', attributes, this.props.children)

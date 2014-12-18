@@ -1,7 +1,15 @@
+/**
+ * @jsx React.DOM
+ */
+
 var React = require('react'),
     Md = require('react-md');
     
 var SidenavDemo = React.createClass({
+    menu: function () {
+        this.refs.menu.open();
+    },
+    
     render: function () {
         return (
             <div>
