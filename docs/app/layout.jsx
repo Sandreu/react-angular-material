@@ -13,8 +13,8 @@ var Layout = React.createClass({
     mixins: [Router.Navigation],
     
     render: function () {
-        var Menu = Demo.map(function (item) {
-            return <a href={this.makeHref('Components.' + item.module)} className="menu-item">{item.module}</a>
+        var Menu = Demo.map(function (item, i) {
+            return <a key={i} href={this.makeHref('Components.' + item.module)} className="menu-item">{item.module}</a>
         }.bind(this));
         return (
             <div layout="column">
@@ -36,7 +36,7 @@ var Layout = React.createClass({
                                     <span>Title</span>
                                 </h2>
                             </Md.Toolbar>
-                            <Md.Content padding={true} style={{ overflow: 'hidden', minHeight: '300px' }}>
+                            <Md.Content style={{ overflow: 'hidden', minHeight: '300px' }}>
                                 <RouteHandler/>
                             </Md.Content>
                         </Md.Content>

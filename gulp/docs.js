@@ -1,8 +1,9 @@
 var source          = require('vinyl-source-stream');
 var browserify      = require('browserify');
 var runSequence     = require('run-sequence');
-// var sass            = require('gulp-sass');
+var sass            = require('gulp-sass');
 var serve           = require('gulp-serve');
+var concat          = require('gulp-concat');
 var deploy          = require('gulp-gh-pages');
 var fs              = require('fs');
 var through2        = require('through2');
@@ -118,8 +119,17 @@ module.exports = function(gulp) {
     // ---------------------------------------------------------
     
     gulp.task('docs:deploy', function () {
-        return gulp.src('./docs/**/*')
+        return gulp.src(['./docs/**/*', '!./docs/app'])
             .pipe(deploy());
+    });
+    
+    // ---------------------------------------------------------
+    
+    gulp.task('docs:sass', function () {
+        return gulp.src('./docs/**/*.scss')
+            .pipe(concat('style.css'))
+            .pipe(sass())
+            .pipe(gulp.dest('docs/css/'));
     });
     
     // ---------------------------------------------------------
@@ -128,12 +138,15 @@ module.exports = function(gulp) {
         gulp.start('docs:dist');
         gulp.start('docs:app');
         gulp.start('docs:demo');
+        gulp.start('docs:sass');
         
         gulp.watch(['./src/**/*.jsx', '!./src/**/demo/*.jsx'], ['docs:dist']);
         
         gulp.watch(['./docs/**/*.jsx'], ['docs:app']);
         
         gulp.watch(['./src/**/demo/*.jsx'], ['docs:demo']);
+        
+        gulp.watch(['./docs/**/*.scss'], ['docs:sass']);
         
     });
     
