@@ -126,7 +126,7 @@ module.exports = function(gulp) {
     // ---------------------------------------------------------
     
     gulp.task('docs:sass', function () {
-        return gulp.src('./docs/**/*.scss')
+        return gulp.src(['./docs/**/*.scss'])
             .pipe(concat('style.css'))
             .pipe(sass())
             .pipe(gulp.dest('docs/css/'));
@@ -140,7 +140,7 @@ module.exports = function(gulp) {
         gulp.start('docs:demo');
         gulp.start('docs:sass');
         
-        gulp.watch(['./src/**/*.jsx', '!./src/**/demo/*.jsx'], ['docs:dist']);
+        gulp.watch(['./src/**/*.jsx', './src/**/*.js', '!./src/**/demo/*.jsx'], ['docs:dist']);
         
         gulp.watch(['./docs/**/*.jsx'], ['docs:app']);
         

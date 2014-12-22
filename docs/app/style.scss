@@ -1,9 +1,14 @@
+
 .demo-container {
     border-radius: 4px;
     -webkit-transition: 0.02s padding cubic-bezier(0.35, 0, 0.25, 1);
     transition: 0.02s padding cubic-bezier(0.35, 0, 0.25, 1);
     position: relative;
     padding-bottom: 0;
+    .main-toolbar {
+        background: white;
+        color: black;
+    }
 }
 
 .menu-item {

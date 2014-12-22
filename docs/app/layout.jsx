@@ -31,7 +31,7 @@ var Layout = React.createClass({
                     
                     <Md.Whiteframe layoutFill className="demo-container" style={{margin:'-85px 0 20px 0', zIndex:2}}>
                         <Md.Content layout="column">
-                            <Md.Toolbar>
+                            <Md.Toolbar className="main-toolbar">
                                 <h2 className="md-toolbar-tools">
                                     <span>Title</span>
                                 </h2>
