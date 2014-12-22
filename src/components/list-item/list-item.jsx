@@ -2,7 +2,8 @@
  * @jsx React.DOM
  */
 
-var React = require('react');
+var React = require('react'),
+    Divider = require('../divider/divider.jsx');
 
 var ListItem = React.createClass({
     getDefaultProps: function() {
@@ -16,7 +17,7 @@ var ListItem = React.createClass({
         return (
             React.createElement('md-item', {className: this.props.className}, 
                 React.createElement('md-item-content', {}, this.props.children),
-                this.props.divider ? React.createElement('md-divider', {className: 'md-default-theme'}) : null
+                this.props.divider ? <Divider /> : null
             )
         );
     }

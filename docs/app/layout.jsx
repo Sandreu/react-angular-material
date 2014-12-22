@@ -32,13 +32,14 @@ var Layout = React.createClass({
                         </Md.Content>
                     </Md.Sidenav>
                     
-                    <Md.Whiteframe layoutFill className="demo-container" style={{margin:'-85px 0 20px 0', zIndex:2}}>
+                    <Md.Whiteframe layoutFill className="demo-container" style={{margin:'-64px 0 20px 0', zIndex:2}}>
                         <Md.Content layout="column">
                             <Md.Toolbar className="main-toolbar">
                                 <h2 className="md-toolbar-tools">
                                     <span>{title}</span>
                                 </h2>
                             </Md.Toolbar>
+                            <Md.Divider />
                             <Md.Content style={{ overflow: 'hidden', minHeight: '300px' }}>
                                 <RouteHandler/>
                             </Md.Content>
