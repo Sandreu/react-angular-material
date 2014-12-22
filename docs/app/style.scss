@@ -42,9 +42,6 @@
     &:hover {
         color: #999;
     }
-    &:focus {
-        font-weight: bold;
-    }
     &.menu-title {
         color: #888;
         font-size: 14px;
@@ -55,6 +52,9 @@
     }
     &:hover, &.menu-title.active {
         color: #1976d2;
+    }
+    &.active {
+        background: rgba(0, 0, 0, 0.1);
     }
 }
 

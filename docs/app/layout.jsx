@@ -10,11 +10,11 @@ var React = require('react'),
     Demo = require('react-md-demo');
 
 var Layout = React.createClass({
-    mixins: [Router.Navigation],
+    mixins: [Router.Navigation, Router.State],
     
     render: function () {
         var Menu = Demo.map(function (item, i) {
-            return <a key={i} href={this.makeHref('Components.' + item.module)} className="menu-item">{item.module}</a>
+            return <Router.Link key={i} to={'Components.' + item.module} className={'menu-item'} activeClassName="active">{item.module}</Router.Link>
         }.bind(this));
         return (
             <div layout="column">
