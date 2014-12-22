@@ -14,8 +14,12 @@ var Layout = React.createClass({
     
     render: function () {
         var Menu = Demo.map(function (item, i) {
-            return <Router.Link key={i} to={'Components.' + item.module} className={'menu-item'} activeClassName="active">{item.module}</Router.Link>
+            return <Router.Link key={i} to={'Demo.' + item.module} className={'menu-item'} activeClassName="active">{item.module}</Router.Link>
         }.bind(this));
+        
+        console.log(this, this.getPath(), this.getRoutes())
+        var title = this.getPathname().replace('/', '').replace('.', ' > ');
+        
         return (
             <div layout="column">
                 <Md.Toolbar className="md-tall" zDepth={2} style={{zIndex:1}}>
@@ -33,7 +37,7 @@ var Layout = React.createClass({
                         <Md.Content layout="column">
                             <Md.Toolbar className="main-toolbar">
                                 <h2 className="md-toolbar-tools">
-                                    <span>Title</span>
+                                    <span>{title}</span>
                                 </h2>
                             </Md.Toolbar>
                             <Md.Content style={{ overflow: 'hidden', minHeight: '300px' }}>
