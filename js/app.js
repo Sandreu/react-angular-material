@@ -32,7 +32,7 @@ var React = require('react'),
 
 
 var components_demo = demos.map(function (item, i) {
-    return React.createElement(Route, {key: i, name: 'Components.' + item.module, handler: require('react-md-demo/' + item.module)})
+    return React.createElement(Route, {key: i, name: 'Demo.' + item.module, handler: require('react-md-demo/' + item.module)})
 });
 
 
@@ -63,12 +63,16 @@ var React = require('react'),
     Demo = require('react-md-demo');
 
 var Layout = React.createClass({displayName: "Layout",
-    mixins: [Router.Navigation],
+    mixins: [Router.Navigation, Router.State],
     
     render: function () {
         var Menu = Demo.map(function (item, i) {
-            return React.createElement("a", {key: i, href: this.makeHref('Components.' + item.module), className: "menu-item"}, item.module)
+            return React.createElement(Router.Link, {key: i, to: 'Demo.' + item.module, className: 'menu-item', activeClassName: "active"}, item.module)
         }.bind(this));
+        
+        console.log(this, this.getPath(), this.getRoutes())
+        var title = this.getPathname().replace('/', '').replace('.', ' > ');
+        
         return (
             React.createElement("div", {layout: "column"}, 
                 React.createElement(Md.Toolbar, {className: "md-tall", zDepth: 2, style: {zIndex:1}}, 
@@ -86,7 +90,7 @@ var Layout = React.createClass({displayName: "Layout",
                         React.createElement(Md.Content, {layout: "column"}, 
                             React.createElement(Md.Toolbar, {className: "main-toolbar"}, 
                                 React.createElement("h2", {className: "md-toolbar-tools"}, 
-                                    React.createElement("span", null, "Title")
+                                    React.createElement("span", null, title)
                                 )
                             ), 
                             React.createElement(Md.Content, {style: { overflow: 'hidden', minHeight: '300px'}}, 

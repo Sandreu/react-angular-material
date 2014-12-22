@@ -31,7 +31,7 @@ var React = require('react'),
 
 
 var components_demo = demos.map(function (item, i) {
-    return <Route key={i} name={'Components.' + item.module} handler={require('react-md-demo/' + item.module)} />
+    return <Route key={i} name={'Demo.' + item.module} handler={require('react-md-demo/' + item.module)} />
 });
 
 

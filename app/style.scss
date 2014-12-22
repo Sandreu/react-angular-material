@@ -8,6 +8,29 @@
     .main-toolbar {
         background: white;
         color: black;
+        border-bottom: 1px solid #f7f7f7;
+    }
+    .md-button {
+        margin: 1em;
+    }
+    .md-button:not(.md-fab) {
+        min-width:10em; padding:6px;
+        line-height: 25px;
+    }
+    
+}
+
+.demo-well {
+    border-bottom:1px solid #f7f7f7;
+    padding: 30px;
+    margin: 0 40px;
+    position: relative;
+    .demo-well-title {
+        color: #bbb;
+        position: absolute;
+        bottom: 5px;
+        left: 10px;
+        font-size: 12px;
     }
 }
 
@@ -42,9 +65,6 @@
     &:hover {
         color: #999;
     }
-    &:focus {
-        font-weight: bold;
-    }
     &.menu-title {
         color: #888;
         font-size: 14px;
@@ -55,6 +75,9 @@
     }
     &:hover, &.menu-title.active {
         color: #1976d2;
+    }
+    &.active {
+        background: rgba(0, 0, 0, 0.1);
     }
 }
 

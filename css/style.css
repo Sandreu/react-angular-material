@@ -6,7 +6,26 @@
   padding-bottom: 0; }
   .demo-container .main-toolbar {
     background: white;
-    color: black; }
+    color: black;
+    border-bottom: 1px solid #f7f7f7; }
+  .demo-container .md-button {
+    margin: 1em; }
+  .demo-container .md-button:not(.md-fab) {
+    min-width: 10em;
+    padding: 6px;
+    line-height: 25px; }
+
+.demo-well {
+  border-bottom: 1px solid #f7f7f7;
+  padding: 30px;
+  margin: 0 40px;
+  position: relative; }
+  .demo-well .demo-well-title {
+    color: #bbb;
+    position: absolute;
+    bottom: 5px;
+    left: 10px;
+    font-size: 12px; }
 
 .menu-item {
   background: none;
@@ -37,8 +56,6 @@
     opacity: 0; }
   .menu-item:hover {
     color: #999; }
-  .menu-item:focus {
-    font-weight: bold; }
   .menu-item.menu-title {
     color: #888;
     font-size: 14px;
@@ -48,3 +65,5 @@
     transition: color 0.35s cubic-bezier(0.35, 0, 0.25, 1); }
   .menu-item:hover, .menu-item.menu-title.active {
     color: #1976d2; }
+  .menu-item.active {
+    background: rgba(0, 0, 0, 0.1); }
