@@ -39,7 +39,7 @@ var components_demo = demos.map(function (item, i) {
 var routes = (
     React.createElement(Route, {handler: Layout, path: "/"}, 
         components_demo, 
-        React.createElement(Router.DefaultRoute, {handler: require('react-md-demo/' + demos[0].module)})
+        React.createElement(Router.Redirect, {from: "/", to: 'Demo.' + demos[0].module})
     )
 );
 
