@@ -38,7 +38,7 @@ var components_demo = demos.map(function (item, i) {
 var routes = (
     <Route handler={Layout} path="/">
         {components_demo}
-        <Router.DefaultRoute handler={require('react-md-demo/' + demos[0].module)} />
+        <Router.Redirect from="/" to={'Demo.' + demos[0].module} />
     </Route>
 );
 
