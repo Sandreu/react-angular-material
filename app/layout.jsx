@@ -17,7 +17,6 @@ var Layout = React.createClass({
             return <Router.Link key={i} to={'Demo.' + item.module} className={'menu-item'} activeClassName="active">{item.module}</Router.Link>
         }.bind(this));
         
-        console.log(this, this.getPath(), this.getRoutes())
         var title = this.getPathname().replace('/', '').replace('.', ' > ');
         
         return (

@@ -70,7 +70,6 @@ var Layout = React.createClass({displayName: "Layout",
             return React.createElement(Router.Link, {key: i, to: 'Demo.' + item.module, className: 'menu-item', activeClassName: "active"}, item.module)
         }.bind(this));
         
-        console.log(this, this.getPath(), this.getRoutes())
         var title = this.getPathname().replace('/', '').replace('.', ' > ');
         
         return (

@@ -1030,6 +1030,66 @@ module.exports = Content;
  */
 
 var React = require('react');
+    
+var Input = React.createClass({displayName: "Input",
+    
+    propTypes: {
+        label: React.PropTypes.string,
+        defaultValue: React.PropTypes.string,
+    },
+    
+    getDefaultProps: function() {
+        return {
+            label: '',
+            type:'text',
+            defaultValue: ''
+        };
+    },
+    
+    getInitialState: function () {
+        return {
+            value: this.props.defaultValue,
+            focus: false
+        }
+    },
+    
+    onBlur: function () {
+        this.setState({focus: false});
+        if (this.props.onBlur) this.props.onBlur.apply(null, arguments);
+    },
+
+    onFocus: function () {
+        this.setState({focus: true});
+        if (this.props.onFocus) this.props.onFocus.apply(null, arguments);
+    },
+
+    onChange: function (e) {
+        this.setState({value: e.target.value});
+        if (this.props.onFocus) this.props.onChange.apply(null, arguments);
+    },
+    
+    render: function() {
+        var className = React.addons.classSet({
+            'md-default-theme' : true,
+            'md-input-has-value' : this.state.value,
+            'md-input-focused' : this.state.focus,
+        });
+        return (
+            React.createElement('md-input-group', {label: this.props.label, className:className}, 
+                React.createElement("label", null, this.props.label),
+                React.createElement("input", React.__spread({},  this.props, {ref: "input", onFocus: this.onFocus, onBlur: this.onBlur, onChange: this.onChange}))
+            )
+        );
+    },
+});
+
+module.exports = Input;
+},{"react":"react"}],17:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+
+var React = require('react');
 
 var ListItem = React.createClass({displayName: "ListItem",
     getDefaultProps: function() {
@@ -1050,7 +1110,7 @@ var ListItem = React.createClass({displayName: "ListItem",
 });
 
 module.exports = ListItem;
-},{"react":"react"}],17:[function(require,module,exports){
+},{"react":"react"}],18:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -1073,7 +1133,7 @@ var List = React.createClass({displayName: "List",
 });
 
 module.exports = List;
-},{"react":"react"}],18:[function(require,module,exports){
+},{"react":"react"}],19:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -1161,7 +1221,7 @@ var Sidenav = React.createClass({displayName: "Sidenav",
 });
 
 module.exports = Sidenav;
-},{"../../mixins/classTransitions.jsx":21,"../backdrop/backdrop.jsx":13,"react":"react"}],19:[function(require,module,exports){
+},{"../../mixins/classTransitions.jsx":22,"../backdrop/backdrop.jsx":13,"react":"react"}],20:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -1193,7 +1253,7 @@ var Toolbar = React.createClass({displayName: "Toolbar",
 });
 
 module.exports = Toolbar;
-},{"react":"react"}],20:[function(require,module,exports){
+},{"react":"react"}],21:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -1222,7 +1282,7 @@ var Whiteframe = React.createClass({displayName: "Whiteframe",
 });
 
 module.exports = Whiteframe;
-},{"react":"react"}],21:[function(require,module,exports){
+},{"react":"react"}],22:[function(require,module,exports){
 /**
  * This code is deeply inspired from the ReactCSSTransitionGroupChild from 
  * https://github.com/facebook/react
@@ -1319,10 +1379,11 @@ module.exports = {
     Backdrop        : require('./src/components/backdrop/backdrop.jsx'),
     Button          : require('./src/components/button/button.jsx'),
     Content         : require('./src/components/content/content.jsx'),
+    Input           : require('./src/components/input/input.jsx'),
     List            : require('./src/components/list/list.jsx'),
     ListItem        : require('./src/components/list-item/list-item.jsx'),
     Sidenav         : require('./src/components/sidenav/sidenav.jsx'),
     Toolbar         : require('./src/components/toolbar/toolbar.jsx'),
     Whiteframe      : require('./src/components/whiteframe/whiteframe.jsx'),
 };
-},{"./src/components/backdrop/backdrop.jsx":13,"./src/components/button/button.jsx":14,"./src/components/content/content.jsx":15,"./src/components/list-item/list-item.jsx":16,"./src/components/list/list.jsx":17,"./src/components/sidenav/sidenav.jsx":18,"./src/components/toolbar/toolbar.jsx":19,"./src/components/whiteframe/whiteframe.jsx":20}]},{},[]);
+},{"./src/components/backdrop/backdrop.jsx":13,"./src/components/button/button.jsx":14,"./src/components/content/content.jsx":15,"./src/components/input/input.jsx":16,"./src/components/list-item/list-item.jsx":17,"./src/components/list/list.jsx":18,"./src/components/sidenav/sidenav.jsx":19,"./src/components/toolbar/toolbar.jsx":20,"./src/components/whiteframe/whiteframe.jsx":21}]},{},[]);
