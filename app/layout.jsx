@@ -13,8 +13,8 @@ var Layout = React.createClass({
     mixins: [Router.Navigation],
     
     render: function () {
-        var Menu = Demo.map(function (item) {
-            return <a href={this.makeHref('Components.' + item.module)} className="menu-item">{item.module}</a>
+        var Menu = Demo.map(function (item, i) {
+            return <a key={i} href={this.makeHref('Components.' + item.module)} className="menu-item">{item.module}</a>
         }.bind(this));
         return (
             <div layout="column">
@@ -31,12 +31,12 @@ var Layout = React.createClass({
                     
                     <Md.Whiteframe layoutFill className="demo-container" style={{margin:'-85px 0 20px 0', zIndex:2}}>
                         <Md.Content layout="column">
-                            <Md.Toolbar>
+                            <Md.Toolbar className="main-toolbar">
                                 <h2 className="md-toolbar-tools">
                                     <span>Title</span>
                                 </h2>
                             </Md.Toolbar>
-                            <Md.Content padding={true} style={{ overflow: 'hidden', minHeight: '300px' }}>
+                            <Md.Content style={{ overflow: 'hidden', minHeight: '300px' }}>
                                 <RouteHandler/>
                             </Md.Content>
                         </Md.Content>

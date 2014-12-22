@@ -6,7 +6,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 var React = require('react'),
     Md = require('react-md');
     
-var ButtonDemo = React.createClass({displayName: 'ButtonDemo',
+var ButtonDemo = React.createClass({displayName: "ButtonDemo",
     
     render: function () {
         return (
@@ -35,6 +35,100 @@ var ButtonDemo = React.createClass({displayName: 'ButtonDemo',
 });
 
 module.exports = ButtonDemo;
+},{"react":"react","react-md":"react-md"}],"react-md-demo/List":[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+
+var React = require('react'),
+    Md = require('react-md');
+    
+var SidenavDemo = React.createClass({displayName: "SidenavDemo",
+    menu: function () {
+        this.refs.menu.open();
+    },
+    
+    render: function () {
+        return (
+            React.createElement(Md.List, null, 
+                React.createElement(Md.ListItem, null, 
+                    React.createElement("div", {className: "md-tile-content"}, 
+                        React.createElement("h3", null, "Title"), 
+                        React.createElement("h4", null, "Subtitle"), 
+                        React.createElement("p", null, 
+                            "Notes list"
+                        )
+                    )
+                ), 
+                React.createElement(Md.ListItem, null, 
+                    React.createElement("div", {className: "md-tile-content"}, 
+                        React.createElement("h3", null, "Title"), 
+                        React.createElement("h4", null, "Subtitle"), 
+                        React.createElement("p", null, 
+                            "Notes list"
+                        )
+                    )
+                ), 
+                React.createElement(Md.ListItem, null, 
+                    React.createElement("div", {className: "md-tile-content"}, 
+                        React.createElement("h3", null, "Title"), 
+                        React.createElement("h4", null, "Subtitle"), 
+                        React.createElement("p", null, 
+                            "Notes list"
+                        )
+                    )
+                ), 
+                React.createElement(Md.ListItem, null, 
+                    React.createElement("div", {className: "md-tile-content"}, 
+                        React.createElement("h3", null, "Title"), 
+                        React.createElement("h4", null, "Subtitle"), 
+                        React.createElement("p", null, 
+                            "Notes list"
+                        )
+                    )
+                ), 
+                React.createElement(Md.ListItem, null, 
+                    React.createElement("div", {className: "md-tile-content"}, 
+                        React.createElement("h3", null, "Title"), 
+                        React.createElement("h4", null, "Subtitle"), 
+                        React.createElement("p", null, 
+                            "Notes list"
+                        )
+                    )
+                ), 
+                React.createElement(Md.ListItem, null, 
+                    React.createElement("div", {className: "md-tile-content"}, 
+                        React.createElement("h3", null, "Title"), 
+                        React.createElement("h4", null, "Subtitle"), 
+                        React.createElement("p", null, 
+                            "Notes list"
+                        )
+                    )
+                ), 
+                React.createElement(Md.ListItem, null, 
+                    React.createElement("div", {className: "md-tile-content"}, 
+                        React.createElement("h3", null, "Title"), 
+                        React.createElement("h4", null, "Subtitle"), 
+                        React.createElement("p", null, 
+                            "Notes list"
+                        )
+                    )
+                ), 
+                React.createElement(Md.ListItem, null, 
+                    React.createElement("div", {className: "md-tile-content"}, 
+                        React.createElement("h3", null, "Title"), 
+                        React.createElement("h4", null, "Subtitle"), 
+                        React.createElement("p", null, 
+                            "Notes list"
+                        )
+                    )
+                )
+            )
+        );
+    }
+});
+
+module.exports = SidenavDemo;
 },{"react":"react","react-md":"react-md"}],"react-md-demo/Sidenav":[function(require,module,exports){
 /**
  * @jsx React.DOM
@@ -43,7 +137,7 @@ module.exports = ButtonDemo;
 var React = require('react'),
     Md = require('react-md');
     
-var SidenavDemo = React.createClass({displayName: 'SidenavDemo',
+var SidenavDemo = React.createClass({displayName: "SidenavDemo",
     menu: function () {
         this.refs.menu.open();
     },
@@ -83,5 +177,5 @@ var SidenavDemo = React.createClass({displayName: 'SidenavDemo',
 
 module.exports = SidenavDemo;
 },{"react":"react","react-md":"react-md"}],"react-md-demo":[function(require,module,exports){
-module.exports = [{"module":"Button","source":"/**\n * @jsx React.DOM\n */\n\nvar React = require('react'),\n    Md = require('react-md');\n    \nvar ButtonDemo = React.createClass({\n    \n    render: function () {\n        return (\n            <div>\n                <div layout=\"row\" layoutAlign=\"center center\">\n                    <Md.Button>Button</Md.Button>\n                    <Md.Button primary={true}>Primary</Md.Button>\n                    <Md.Button disabled={true}>Disabled</Md.Button>\n                    <Md.Button warn={true}>Warn</Md.Button>\n                </div>\n                <div layout=\"row\" layoutAlign=\"center center\">\n                    <Md.Button decorator=\"raised\">Button</Md.Button>\n                    <Md.Button decorator=\"raised\" primary={true}>Primary</Md.Button>\n                    <Md.Button decorator=\"raised\" disabled={true}>Disabled</Md.Button>\n                    <Md.Button decorator=\"raised\" warn={true}>Warn</Md.Button>\n                </div>\n                <div layout=\"row\" layoutAlign=\"center center\">\n                    <Md.Button decorator=\"fab\">i</Md.Button>\n                    <Md.Button decorator=\"fab\" primary={true}>i</Md.Button>\n                    <Md.Button decorator=\"fab\" disabled={true}>i</Md.Button>\n                    <Md.Button decorator=\"fab\" warn={true}>i</Md.Button>\n                </div>\n            </div>\n        );\n    }\n});\n\nmodule.exports = ButtonDemo;"},{"module":"Sidenav","source":"/**\n * @jsx React.DOM\n */\n\nvar React = require('react'),\n    Md = require('react-md');\n    \nvar SidenavDemo = React.createClass({\n    menu: function () {\n        this.refs.menu.open();\n    },\n    \n    render: function () {\n        return (\n            <div>\n                <p onClick={this.menu}>\n                    Click To Open sidenav\n                </p>\n                <Md.Sidenav ref=\"menu\" side=\"right\">\n                    <Md.List>\n                        <Md.ListItem>\n                            <div className=\"md-tile-content\">\n                                <h3>Title 1</h3>\n                                <h4>Title 2</h4>\n                                <p>\n                                    Notes list\n                                </p>\n                            </div>\n                        </Md.ListItem>\n                        <Md.ListItem>\n                            <div className=\"md-tile-content\">\n                                <h3>Title 1</h3>\n                                <h4>Title 2</h4>\n                                <p>\n                                    Notes list\n                                </p>\n                            </div>\n                        </Md.ListItem>\n                    </Md.List>\n                </Md.Sidenav>\n            </div>\n        );\n    }\n});\n\nmodule.exports = SidenavDemo;"}]
+module.exports = [{"module":"Button","source":"/**\n * @jsx React.DOM\n */\n\nvar React = require('react'),\n    Md = require('react-md');\n    \nvar ButtonDemo = React.createClass({\n    \n    render: function () {\n        return (\n            <div>\n                <div layout=\"row\" layoutAlign=\"center center\">\n                    <Md.Button>Button</Md.Button>\n                    <Md.Button primary={true}>Primary</Md.Button>\n                    <Md.Button disabled={true}>Disabled</Md.Button>\n                    <Md.Button warn={true}>Warn</Md.Button>\n                </div>\n                <div layout=\"row\" layoutAlign=\"center center\">\n                    <Md.Button decorator=\"raised\">Button</Md.Button>\n                    <Md.Button decorator=\"raised\" primary={true}>Primary</Md.Button>\n                    <Md.Button decorator=\"raised\" disabled={true}>Disabled</Md.Button>\n                    <Md.Button decorator=\"raised\" warn={true}>Warn</Md.Button>\n                </div>\n                <div layout=\"row\" layoutAlign=\"center center\">\n                    <Md.Button decorator=\"fab\">i</Md.Button>\n                    <Md.Button decorator=\"fab\" primary={true}>i</Md.Button>\n                    <Md.Button decorator=\"fab\" disabled={true}>i</Md.Button>\n                    <Md.Button decorator=\"fab\" warn={true}>i</Md.Button>\n                </div>\n            </div>\n        );\n    }\n});\n\nmodule.exports = ButtonDemo;"},{"module":"List","source":"/**\n * @jsx React.DOM\n */\n\nvar React = require('react'),\n    Md = require('react-md');\n    \nvar SidenavDemo = React.createClass({\n    menu: function () {\n        this.refs.menu.open();\n    },\n    \n    render: function () {\n        return (\n            <Md.List>\n                <Md.ListItem>\n                    <div className=\"md-tile-content\">\n                        <h3>Title</h3>\n                        <h4>Subtitle</h4>\n                        <p>\n                            Notes list\n                        </p>\n                    </div>\n                </Md.ListItem>\n                <Md.ListItem>\n                    <div className=\"md-tile-content\">\n                        <h3>Title</h3>\n                        <h4>Subtitle</h4>\n                        <p>\n                            Notes list\n                        </p>\n                    </div>\n                </Md.ListItem>\n                <Md.ListItem>\n                    <div className=\"md-tile-content\">\n                        <h3>Title</h3>\n                        <h4>Subtitle</h4>\n                        <p>\n                            Notes list\n                        </p>\n                    </div>\n                </Md.ListItem>\n                <Md.ListItem>\n                    <div className=\"md-tile-content\">\n                        <h3>Title</h3>\n                        <h4>Subtitle</h4>\n                        <p>\n                            Notes list\n                        </p>\n                    </div>\n                </Md.ListItem>\n                <Md.ListItem>\n                    <div className=\"md-tile-content\">\n                        <h3>Title</h3>\n                        <h4>Subtitle</h4>\n                        <p>\n                            Notes list\n                        </p>\n                    </div>\n                </Md.ListItem>\n                <Md.ListItem>\n                    <div className=\"md-tile-content\">\n                        <h3>Title</h3>\n                        <h4>Subtitle</h4>\n                        <p>\n                            Notes list\n                        </p>\n                    </div>\n                </Md.ListItem>\n                <Md.ListItem>\n                    <div className=\"md-tile-content\">\n                        <h3>Title</h3>\n                        <h4>Subtitle</h4>\n                        <p>\n                            Notes list\n                        </p>\n                    </div>\n                </Md.ListItem>\n                <Md.ListItem>\n                    <div className=\"md-tile-content\">\n                        <h3>Title</h3>\n                        <h4>Subtitle</h4>\n                        <p>\n                            Notes list\n                        </p>\n                    </div>\n                </Md.ListItem>\n            </Md.List>\n        );\n    }\n});\n\nmodule.exports = SidenavDemo;"},{"module":"Sidenav","source":"/**\n * @jsx React.DOM\n */\n\nvar React = require('react'),\n    Md = require('react-md');\n    \nvar SidenavDemo = React.createClass({\n    menu: function () {\n        this.refs.menu.open();\n    },\n    \n    render: function () {\n        return (\n            <div>\n                <p onClick={this.menu}>\n                    Click To Open sidenav\n                </p>\n                <Md.Sidenav ref=\"menu\" side=\"right\">\n                    <Md.List>\n                        <Md.ListItem>\n                            <div className=\"md-tile-content\">\n                                <h3>Title 1</h3>\n                                <h4>Title 2</h4>\n                                <p>\n                                    Notes list\n                                </p>\n                            </div>\n                        </Md.ListItem>\n                        <Md.ListItem>\n                            <div className=\"md-tile-content\">\n                                <h3>Title 1</h3>\n                                <h4>Title 2</h4>\n                                <p>\n                                    Notes list\n                                </p>\n                            </div>\n                        </Md.ListItem>\n                    </Md.List>\n                </Md.Sidenav>\n            </div>\n        );\n    }\n});\n\nmodule.exports = SidenavDemo;"}]
 },{}]},{},[]);

@@ -564,7 +564,7 @@ ReactElement.createElement = function(type, config, children) {
   }
 
   // Resolve default props
-  if (type.defaultProps) {
+  if (type && type.defaultProps) {
     var defaultProps = type.defaultProps;
     for (propName in defaultProps) {
       if (typeof props[propName] === 'undefined') {
@@ -926,7 +926,7 @@ module.exports = warning;
 
 var React = require('react');
 
-var Backdrop = React.createClass({displayName: 'Backdrop',
+var Backdrop = React.createClass({displayName: "Backdrop",
     
     render: function() {
         return (
@@ -944,7 +944,7 @@ module.exports = Backdrop;
 var React = require('react'),
     Md = require('react-md');
     
-var Button = React.createClass({displayName: 'Button',
+var Button = React.createClass({displayName: "Button",
     
     propTypes: {
         className: React.PropTypes.string,
@@ -996,7 +996,7 @@ module.exports = Button;
 
 var React = require('react');
 
-var Content = React.createClass({displayName: 'Content',
+var Content = React.createClass({displayName: "Content",
     propTypes: {
         padding: React.PropTypes.bool,
         className: React.PropTypes.string
@@ -1031,7 +1031,7 @@ module.exports = Content;
 
 var React = require('react');
 
-var ListItem = React.createClass({displayName: 'ListItem',
+var ListItem = React.createClass({displayName: "ListItem",
     getDefaultProps: function() {
         return {
             className: '',
@@ -1057,7 +1057,7 @@ module.exports = ListItem;
 
 var React = require('react');
 
-var List = React.createClass({displayName: 'List',
+var List = React.createClass({displayName: "List",
     getDefaultProps: function() {
         return {
             className: ''
@@ -1085,7 +1085,7 @@ var React = require('react'),
     ClassTransitionsMixin = require('../../mixins/classTransitions.jsx'),
     Backdrop = require('../backdrop/backdrop.jsx');
     
-var Sidenav = React.createClass({displayName: 'Sidenav',
+var Sidenav = React.createClass({displayName: "Sidenav",
     mixins: [ClassTransitionsMixin],
     
     propTypes: {
@@ -1168,7 +1168,7 @@ module.exports = Sidenav;
 
 var React = require('react');
 
-var Toolbar = React.createClass({displayName: 'Toolbar',
+var Toolbar = React.createClass({displayName: "Toolbar",
   
     propTypes: {
         zDepth: React.PropTypes.number,
@@ -1200,7 +1200,7 @@ module.exports = Toolbar;
 
 var React = require('react');
 
-var Whiteframe = React.createClass({displayName: 'Whiteframe',
+var Whiteframe = React.createClass({displayName: "Whiteframe",
     propTypes: {
         zDepth: React.PropTypes.number
     },

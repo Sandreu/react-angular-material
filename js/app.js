@@ -26,6 +26,8 @@ var React = require('react'),
     Md = require('react-md'),
     Layout = require('./layout.jsx'),
     Route = Router.Route,
+    
+    
     demos = require('react-md-demo');
 
 
@@ -60,12 +62,12 @@ var React = require('react'),
     Md = require('react-md')
     Demo = require('react-md-demo');
 
-var Layout = React.createClass({displayName: 'Layout',
+var Layout = React.createClass({displayName: "Layout",
     mixins: [Router.Navigation],
     
     render: function () {
-        var Menu = Demo.map(function (item) {
-            return React.createElement("a", {href: this.makeHref('Components.' + item.module), className: "menu-item"}, item.module)
+        var Menu = Demo.map(function (item, i) {
+            return React.createElement("a", {key: i, href: this.makeHref('Components.' + item.module), className: "menu-item"}, item.module)
         }.bind(this));
         return (
             React.createElement("div", {layout: "column"}, 
@@ -82,12 +84,12 @@ var Layout = React.createClass({displayName: 'Layout',
                     
                     React.createElement(Md.Whiteframe, {layoutFill: true, className: "demo-container", style: {margin:'-85px 0 20px 0', zIndex:2}}, 
                         React.createElement(Md.Content, {layout: "column"}, 
-                            React.createElement(Md.Toolbar, null, 
+                            React.createElement(Md.Toolbar, {className: "main-toolbar"}, 
                                 React.createElement("h2", {className: "md-toolbar-tools"}, 
                                     React.createElement("span", null, "Title")
                                 )
                             ), 
-                            React.createElement(Md.Content, {padding: true, style: { overflow: 'hidden', minHeight: '300px'}}, 
+                            React.createElement(Md.Content, {style: { overflow: 'hidden', minHeight: '300px'}}, 
                                 React.createElement(RouteHandler, null)
                             )
                         )
@@ -2066,9 +2068,7 @@ var HistoryLocation = {
     notifyChange(LocationActions.REPLACE);
   },
 
-  pop: function () {
-    History.back();
-  },
+  pop: History.back,
 
   getCurrentPath: getWindowPath,
 
@@ -2559,7 +2559,7 @@ var canUseDOM = require('react/lib/ExecutionEnvironment').canUseDOM;
 var History = {
 
   /**
-   * Sends the browser back one entry in the history, if one is available.
+   * Sends the browser back one entry in the history.
    */
   back: function () {
     invariant(
@@ -2932,7 +2932,6 @@ module.exports = Transition;
 },{"./Promise":31,"./Redirect":33,"./reversedArray":38,"react/lib/Object.assign":52}],35:[function(require,module,exports){
 (function (process){
 /* jshint -W058 */
-
 var React = require('react');
 var warning = require('react/lib/warning');
 var invariant = require('react/lib/invariant');
@@ -3025,7 +3024,15 @@ function createMatch(route, params) {
   return { routes: [ route ], params: params };
 }
 
-function hasMatch(routes, route, prevParams, nextParams) {
+function hasProperties(object, properties) {
+  for (var propertyName in properties)
+    if (properties.hasOwnProperty(propertyName) && object[propertyName] !== properties[propertyName])
+      return false;
+
+  return true;
+}
+
+function hasMatch(routes, route, prevParams, nextParams, prevQuery, nextQuery) {
   return routes.some(function (r) {
     if (r !== route)
       return false;
@@ -3033,6 +3040,7 @@ function hasMatch(routes, route, prevParams, nextParams) {
     var paramNames = route.paramNames;
     var paramName;
 
+    // Ensure that all params the route cares about did not change.
     for (var i = 0, len = paramNames.length; i < len; ++i) {
       paramName = paramNames[i];
 
@@ -3040,7 +3048,8 @@ function hasMatch(routes, route, prevParams, nextParams) {
         return false;
     }
 
-    return true;
+    // Ensure the query hasn't changed.
+    return hasProperties(prevQuery, nextQuery) && hasProperties(nextQuery, prevQuery);
   });
 }
 
@@ -3085,6 +3094,20 @@ function createRouter(options) {
   function updateState() {
     state = nextState;
     nextState = {};
+  }
+
+  if (typeof location === 'string') {
+    warning(
+      !canUseDOM || process.env.NODE_ENV === 'test',
+      'You should not use a static location in a DOM environment because ' +
+      'the router will not be kept in sync with the current URL'
+    );
+  } else {
+    invariant(
+      canUseDOM,
+      'You cannot use %s without a DOM',
+      location
+    );
   }
 
   // Automatically fall back to full page refreshes in
@@ -3176,8 +3199,15 @@ function createRouter(options) {
       },
 
       /**
-       * Transitions to the previous URL. Returns true if the router
-       * was able to go back, false otherwise.
+       * Transitions to the previous URL if one is available. Returns true if the
+       * router was able to go back, false otherwise.
+       *
+       * Note: The router only tracks history entries in your application, not the
+       * current browser session, so you can safely call this function without guarding
+       * against sending the user back to some other site. However, when using
+       * RefreshLocation (which is the fallback for HistoryLocation in browsers that
+       * don't support HTML5 history) this method will *always* send the client back
+       * because we cannot reliably track history length.
        */
       goBack: function () {
         invariant(
@@ -3185,7 +3215,7 @@ function createRouter(options) {
           'You cannot use goBack with a static location'
         );
 
-        if (History.length > 1) {
+        if (History.length > 1 || location === RefreshLocation) {
           location.pop();
           return true;
         }
@@ -3248,6 +3278,7 @@ function createRouter(options) {
 
         var prevRoutes = state.routes || [];
         var prevParams = state.params || {};
+        var prevQuery = state.query || {};
 
         var nextRoutes = match.routes || [];
         var nextParams = match.params || {};
@@ -3256,25 +3287,15 @@ function createRouter(options) {
         var fromRoutes, toRoutes;
         if (prevRoutes.length) {
           fromRoutes = prevRoutes.filter(function (route) {
-            return !hasMatch(nextRoutes, route, prevParams, nextParams);
+            return !hasMatch(nextRoutes, route, prevParams, nextParams, prevQuery, nextQuery);
           });
 
           toRoutes = nextRoutes.filter(function (route) {
-            return !hasMatch(prevRoutes, route, prevParams, nextParams);
+            return !hasMatch(prevRoutes, route, prevParams, nextParams, prevQuery, nextQuery);
           });
         } else {
           fromRoutes = [];
           toRoutes = nextRoutes;
-        }
-
-        // If routes' hooks arrays are empty, then we transition to current route.
-        // But path is somehow still get changed.
-        // That could be only because of route query changes.
-        // Need to push current route to routes' hooks arrays.
-        if (!toRoutes.length && !fromRoutes.length) {
-          var currentRoute = state.routes[state.routes.length-1];
-          fromRoutes = [currentRoute];
-          toRoutes = [currentRoute];
         }
 
         var transition = new Transition(path, this.replaceWith.bind(this, path));
@@ -3321,21 +3342,8 @@ function createRouter(options) {
         };
 
         if (typeof location === 'string') {
-          warning(
-            !canUseDOM || process.env.NODE_ENV === 'test',
-            'You should not use a static location in a DOM environment because ' +
-            'the router will not be kept in sync with the current URL'
-          );
-
-          // Dispatch the location.
           router.dispatch(location, null, dispatchHandler);
         } else {
-          invariant(
-            canUseDOM,
-            'You cannot use %s in a non-DOM environment',
-            location
-          );
-
           // Listen for changes to the location.
           var changeListener = function (change) {
             router.dispatch(change.path, change.type, dispatchHandler);
@@ -3421,7 +3429,6 @@ module.exports = createRouter;
 }).call(this,require('_process'))
 },{"../actions/LocationActions":8,"../behaviors/ImitateBrowserBehavior":9,"../components/RouteHandler":16,"../locations/HashLocation":18,"../locations/HistoryLocation":19,"../locations/RefreshLocation":20,"../mixins/NavigationContext":23,"../mixins/Scrolling":25,"../mixins/StateContext":27,"./Cancellation":28,"./History":29,"./Path":30,"./PropTypes":32,"./Redirect":33,"./Transition":34,"./createRoutesFromChildren":36,"./supportsHistory":40,"_process":7,"react":"react","react/lib/ExecutionEnvironment":51,"react/lib/invariant":55,"react/lib/warning":56}],36:[function(require,module,exports){
 /* jshint -W084 */
-
 var React = require('react');
 var warning = require('react/lib/warning');
 var invariant = require('react/lib/invariant');
