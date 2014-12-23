@@ -40,7 +40,7 @@ var Layout = React.createClass({
                                 </h2>
                             </Md.Toolbar>
                             <Md.Divider />
-                            <Md.Content style={{ overflow: 'hidden', minHeight: '300px' }} layout="row">
+                            <Md.Content style={{ overflow: 'hidden', minHeight: '300px' }}>
                                 <RouteHandler/>
                             </Md.Content>
                         </Md.Content>

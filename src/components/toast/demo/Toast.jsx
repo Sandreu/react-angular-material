@@ -24,7 +24,7 @@ var ToastDemo = React.createClass({
     
     render: function () {
         return (
-            <div flex>
+            <div style={{minHeight:'500px'}}>
                 <ChildElement />
                 {this.state.toast}
             </div>
