@@ -56,7 +56,7 @@ var ToastContainerMixin = {
     
     getInitialState: function () {
         return {
-            toast: false,
+            toast: <Anim transitionName="ng"></Anim>,
         };
     },
 
