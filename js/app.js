@@ -93,7 +93,7 @@ var Layout = React.createClass({displayName: "Layout",
                                 )
                             ), 
                             React.createElement(Md.Divider, null), 
-                            React.createElement(Md.Content, {style: { overflow: 'hidden', minHeight: '300px'}, layout: "row"}, 
+                            React.createElement(Md.Content, {style: { overflow: 'hidden', minHeight: '300px'}}, 
                                 React.createElement(RouteHandler, null)
                             )
                         )
