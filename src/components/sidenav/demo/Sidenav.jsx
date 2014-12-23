@@ -36,22 +36,18 @@ var SidenavDemo = React.createClass({
                     <Md.Content>
                         <Md.List>
                             <Md.ListItem>
-                                <div className="md-tile-content">
-                                    <h3>Title</h3>
-                                    <h4>Subtitle</h4>
-                                    <p>
-                                        Notes list
-                                    </p>
-                                </div>
+                                <h3>Title</h3>
+                                <h4>Subtitle</h4>
+                                <p>
+                                    Notes list
+                                </p>
                             </Md.ListItem>
                             <Md.ListItem>
-                                <div className="md-tile-content">
-                                    <h3>Title</h3>
-                                    <h4>Subtitle</h4>
-                                    <p>
-                                        Notes list
-                                    </p>
-                                </div>
+                                <h3>Title</h3>
+                                <h4>Subtitle</h4>
+                                <p>
+                                    Notes list
+                                </p>
                             </Md.ListItem>
                         </Md.List>
                     </Md.Content>

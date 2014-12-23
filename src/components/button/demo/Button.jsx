@@ -9,7 +9,7 @@ var ButtonDemo = React.createClass({
     
     render: function () {
         return (
-            <div layout="column" layoutAlign="space-around">
+            <div layout="column" layoutAlign="space-around" className="demo-buttons">
                 <div layout="row" layoutAlign="center center" className="demo-well">
                     <Md.Button>Button</Md.Button>
                     <Md.Button primary={true}>Primary</Md.Button>
