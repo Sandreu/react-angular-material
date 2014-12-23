@@ -662,11 +662,7 @@ var Sidenav = React.createClass({displayName: "Sidenav",
         lockOpen: React.PropTypes.bool,
         openOnStartup: React.PropTypes.bool,
         zDepth: React.PropTypes.number,
-        side: function(props, propName, componentName) {
-            if (!/left|right/.test(props[propName])) {
-                return new Error('Nav side is left or right only !');
-            }
-        }
+        side: React.PropTypes.oneOf(['left', 'right'])
     },
     
     getDefaultProps: function() {
@@ -741,63 +737,79 @@ var React = require('react'),
 
 var Toast = React.createClass({displayName: "Toast",
     propTypes: {
-        verticalPosition: React.PropTypes.oneOf(['top', 'bottom']),
-        horizontalPosition: React.PropTypes.oneOf(['left', 'right']),
-        content: React.PropTypes.string,
-        action: React.PropTypes.string,
-        capsule: React.PropTypes.bool
+        mdVerticalPosition: React.PropTypes.oneOf(['top', 'bottom']),
+        mdHorizontalPosition: React.PropTypes.oneOf(['left', 'right']),
+        mdContent: React.PropTypes.oneOfType([
+            React.PropTypes.string,
+            React.PropTypes.element
+        ]),
+        mdAction: React.PropTypes.string,
+        mdCapsule: React.PropTypes.bool,
+        mdOnAction: React.PropTypes.func
     },
     
     getDefaultProps: function() {
         return {
-            content: '',
-            action: '',
-            capsule: false,
-            verticalPosition: 'top',
-            horizontalPosition: 'right',
+            mdContent: false,
+            mdAction: '',
+            mdCapsule: false,
+            mdVerticalPosition: 'top',
+            mdHorizontalPosition: 'right',
         };
+    },
+    
+    onAction: function () {
+        if (this.props.mdOnAction) this.props.mdOnAction();
     },
     
     render: function () {
         var className = React.addons.classSet({
             'md-default-theme' : true,
-            'md-capsule' : this.props.capsule,
-            'md-left' : this.props.horizontalPosition == 'left',
-            'md-right' : this.props.horizontalPosition == 'right',
-            'md-top' : this.props.verticalPosition == 'top',
-            'md-bottom' : this.props.verticalPosition == 'bottom',
+            'md-capsule' : this.props.mdCapsule,
+            'md-left' : this.props.mdHorizontalPosition == 'left',
+            'md-right' : this.props.mdHorizontalPosition == 'right',
+            'md-top' : this.props.mdVerticalPosition == 'top',
+            'md-bottom' : this.props.mdVerticalPosition == 'bottom',
         });
+        
         return React.createElement('md-toast', {className: className},
-            React.createElement("span", {flex: true}, this.props.content),
-            this.props.action ? React.createElement(Button, null, this.props.action) : false
+            React.createElement("span", React.__spread({flex: true},  this.props), this.props.mdContent),
+            this.props.mdAction ? React.createElement(Button, {onClick: this.onAction}, this.props.mdAction) : false
         );
     }
 });
 
-var count = 0;
-
 var ToastContainerMixin = {
+    __count: 0,
+    
     childContextTypes: {
         toaster: React.PropTypes.func.isRequired
     },
     
     getChildContext: function () {
         return {
-            toaster: this.addToast
+            toaster: this.toast
         };
     },
     
     getInitialState: function () {
         return {
-            toast: false,
+            toast: React.createElement(Anim, {transitionName: "ng"}),
         };
     },
 
-    addToast: function (content) {
+    closeToast: function(cb) {
+        this.setState({toast: React.createElement(Anim, {transitionName: "ng"})});
+        if (cb) cb();
+    },
+    
+    toast: function (props) {
+        if (typeof props === 'string') props = { mdContent: props };
+        
         this.setState({
             toast: (
                 React.createElement(Anim, {transitionName: "ng"}, 
-                    React.createElement(Toast, {key: ++count, content: content})
+                    React.createElement(Toast, React.__spread({key: ++count},  props, {mdOnAction: this.closeToast.bind(this, props.onAction)}))
                 )
             )
         });
@@ -818,8 +830,8 @@ var ToastMixin = {
         toaster: React.PropTypes.func.isRequired
     },
   
-    toast: function () {
-        this.context.toaster('test');
+    toast: function (props) {
+        this.context.toaster(props);
     }
 };
 
