@@ -10,8 +10,8 @@ var ToastMixin = {
         toaster: React.PropTypes.func.isRequired
     },
   
-    toast: function () {
-        this.context.toaster('test');
+    toast: function (props) {
+        this.context.toaster(props);
     }
 };
 

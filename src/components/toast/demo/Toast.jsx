@@ -8,13 +8,32 @@ var React = require('react'),
 var ChildElement = React.createClass({
     mixins: [Md.ToastMixin],
     
-    showToast: function () {
-        this.toast();   
+    showSimpleToast: function () {
+        this.toast('Hello world !');   
+    },
+    
+    showActionToast: function () {
+        this.toast({
+            mdContent: 'Message',
+            mdAction: 'OK'
+        });   
+    },
+    
+    showCustomToast: function () {
+        this.toast({
+            mdContent: <p>Custom <strong>with bold</strong></p>,
+            mdAction: 'OK',
+            mdCapsule: true
+        });   
     },
     
     render: function () {
         return (
-            <Md.Button decorator="raised" onClick={this.showToast}>Toast !</Md.Button>
+            <div>
+                <Md.Button decorator="raised" onClick={this.showSimpleToast}>Simple Toast</Md.Button>
+                <Md.Button decorator="raised" onClick={this.showActionToast}>Action Toast</Md.Button>
+                <Md.Button decorator="raised" onClick={this.showCustomToast}>Custom Toast</Md.Button>
+            </div>
         );
     }
 });

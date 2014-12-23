@@ -13,10 +13,13 @@
         margin: 1em;
     }
     .md-button:not(.md-fab) {
-        min-width:10em; padding:6px;
+        min-width:10em;
+        padding:6px;
         line-height: 25px;
     }
-    
+    md-toast .md-button:not(.md-fab) {
+        min-width:initial;
+    }
 }
 
 .demo-well {
