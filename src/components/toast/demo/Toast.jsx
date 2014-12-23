@@ -15,7 +15,9 @@ var ChildElement = React.createClass({
     showActionToast: function () {
         this.toast({
             mdContent: 'Message',
-            mdAction: 'OK'
+            mdAction: 'OK',
+            mdVerticalPosition: 'bottom',
+            mdHorizontalPosition: 'left'
         });   
     },
     
@@ -23,7 +25,8 @@ var ChildElement = React.createClass({
         this.toast({
             mdContent: <p>Custom <strong>with bold</strong></p>,
             mdAction: 'OK',
-            mdCapsule: true
+            mdCapsule: true,
+            mdVerticalPosition: 'bottom',
         });   
     },
     
