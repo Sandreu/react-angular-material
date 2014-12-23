@@ -809,7 +809,7 @@ var ToastContainerMixin = {
         this.setState({
             toast: (
                 React.createElement(Anim, {transitionName: "ng"}, 
-                    React.createElement(Toast, React.__spread({key: ++this.count},  props, {mdOnAction: this.closeToast.bind(this, props.onAction)}))
+                    React.createElement(Toast, React.__spread({key: ++this.__count},  props, {mdOnAction: this.closeToast.bind(this, props.onAction)}))
                 )
             )
         });
