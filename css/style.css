@@ -6,8 +6,7 @@
   padding-bottom: 0; }
   .demo-container .main-toolbar {
     background: white;
-    color: black;
-    border-bottom: 1px solid #f7f7f7; }
+    color: black; }
   .demo-container .md-button {
     margin: 1em; }
   .demo-container .md-button:not(.md-fab) {
@@ -16,7 +15,6 @@
     line-height: 25px; }
 
 .demo-well {
-  border-bottom: 1px solid #f7f7f7;
   padding: 30px;
   margin: 0 40px;
   position: relative; }

@@ -198,7 +198,7 @@ var CSSCore = {
 module.exports = CSSCore;
 
 }).call(this,require('_process'))
-},{"./invariant":10,"_process":1}],3:[function(require,module,exports){
+},{"./invariant":5,"_process":1}],3:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -244,395 +244,6 @@ var ExecutionEnvironment = {
 module.exports = ExecutionEnvironment;
 
 },{}],4:[function(require,module,exports){
-/**
- * Copyright 2014, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @providesModule Object.assign
- */
-
-// https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.assign
-
-function assign(target, sources) {
-  if (target == null) {
-    throw new TypeError('Object.assign target cannot be null or undefined');
-  }
-
-  var to = Object(target);
-  var hasOwnProperty = Object.prototype.hasOwnProperty;
-
-  for (var nextIndex = 1; nextIndex < arguments.length; nextIndex++) {
-    var nextSource = arguments[nextIndex];
-    if (nextSource == null) {
-      continue;
-    }
-
-    var from = Object(nextSource);
-
-    // We don't currently support accessors nor proxies. Therefore this
-    // copy cannot throw. If we ever supported this then we must handle
-    // exceptions and side-effects. We don't support symbols so they won't
-    // be transferred.
-
-    for (var key in from) {
-      if (hasOwnProperty.call(from, key)) {
-        to[key] = from[key];
-      }
-    }
-  }
-
-  return to;
-};
-
-module.exports = assign;
-
-},{}],5:[function(require,module,exports){
-/**
- * Copyright 2013-2014, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @providesModule ReactContext
- */
-
-"use strict";
-
-var assign = require("./Object.assign");
-
-/**
- * Keeps track of the current context.
- *
- * The context is automatically passed down the component ownership hierarchy
- * and is accessible via `this.context` on ReactCompositeComponents.
- */
-var ReactContext = {
-
-  /**
-   * @internal
-   * @type {object}
-   */
-  current: {},
-
-  /**
-   * Temporarily extends the current context while executing scopedCallback.
-   *
-   * A typical use case might look like
-   *
-   *  render: function() {
-   *    var children = ReactContext.withContext({foo: 'foo'}, () => (
-   *
-   *    ));
-   *    return <div>{children}</div>;
-   *  }
-   *
-   * @param {object} newContext New context to merge into the existing context
-   * @param {function} scopedCallback Callback to run with the new context
-   * @return {ReactComponent|array<ReactComponent>}
-   */
-  withContext: function(newContext, scopedCallback) {
-    var result;
-    var previousContext = ReactContext.current;
-    ReactContext.current = assign({}, previousContext, newContext);
-    try {
-      result = scopedCallback();
-    } finally {
-      ReactContext.current = previousContext;
-    }
-    return result;
-  }
-
-};
-
-module.exports = ReactContext;
-
-},{"./Object.assign":4}],6:[function(require,module,exports){
-/**
- * Copyright 2013-2014, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @providesModule ReactCurrentOwner
- */
-
-"use strict";
-
-/**
- * Keeps track of the current owner.
- *
- * The current owner is the component who should own any components that are
- * currently being constructed.
- *
- * The depth indicate how many composite components are above this render level.
- */
-var ReactCurrentOwner = {
-
-  /**
-   * @internal
-   * @type {ReactComponent}
-   */
-  current: null
-
-};
-
-module.exports = ReactCurrentOwner;
-
-},{}],7:[function(require,module,exports){
-(function (process){
-/**
- * Copyright 2014, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @providesModule ReactElement
- */
-
-"use strict";
-
-var ReactContext = require("./ReactContext");
-var ReactCurrentOwner = require("./ReactCurrentOwner");
-
-var warning = require("./warning");
-
-var RESERVED_PROPS = {
-  key: true,
-  ref: true
-};
-
-/**
- * Warn for mutations.
- *
- * @internal
- * @param {object} object
- * @param {string} key
- */
-function defineWarningProperty(object, key) {
-  Object.defineProperty(object, key, {
-
-    configurable: false,
-    enumerable: true,
-
-    get: function() {
-      if (!this._store) {
-        return null;
-      }
-      return this._store[key];
-    },
-
-    set: function(value) {
-      ("production" !== process.env.NODE_ENV ? warning(
-        false,
-        'Don\'t set the ' + key + ' property of the component. ' +
-        'Mutate the existing props object instead.'
-      ) : null);
-      this._store[key] = value;
-    }
-
-  });
-}
-
-/**
- * This is updated to true if the membrane is successfully created.
- */
-var useMutationMembrane = false;
-
-/**
- * Warn for mutations.
- *
- * @internal
- * @param {object} element
- */
-function defineMutationMembrane(prototype) {
-  try {
-    var pseudoFrozenProperties = {
-      props: true
-    };
-    for (var key in pseudoFrozenProperties) {
-      defineWarningProperty(prototype, key);
-    }
-    useMutationMembrane = true;
-  } catch (x) {
-    // IE will fail on defineProperty
-  }
-}
-
-/**
- * Base constructor for all React elements. This is only used to make this
- * work with a dynamic instanceof check. Nothing should live on this prototype.
- *
- * @param {*} type
- * @param {string|object} ref
- * @param {*} key
- * @param {*} props
- * @internal
- */
-var ReactElement = function(type, key, ref, owner, context, props) {
-  // Built-in properties that belong on the element
-  this.type = type;
-  this.key = key;
-  this.ref = ref;
-
-  // Record the component responsible for creating this element.
-  this._owner = owner;
-
-  // TODO: Deprecate withContext, and then the context becomes accessible
-  // through the owner.
-  this._context = context;
-
-  if ("production" !== process.env.NODE_ENV) {
-    // The validation flag and props are currently mutative. We put them on
-    // an external backing store so that we can freeze the whole object.
-    // This can be replaced with a WeakMap once they are implemented in
-    // commonly used development environments.
-    this._store = { validated: false, props: props };
-
-    // We're not allowed to set props directly on the object so we early
-    // return and rely on the prototype membrane to forward to the backing
-    // store.
-    if (useMutationMembrane) {
-      Object.freeze(this);
-      return;
-    }
-  }
-
-  this.props = props;
-};
-
-// We intentionally don't expose the function on the constructor property.
-// ReactElement should be indistinguishable from a plain object.
-ReactElement.prototype = {
-  _isReactElement: true
-};
-
-if ("production" !== process.env.NODE_ENV) {
-  defineMutationMembrane(ReactElement.prototype);
-}
-
-ReactElement.createElement = function(type, config, children) {
-  var propName;
-
-  // Reserved names are extracted
-  var props = {};
-
-  var key = null;
-  var ref = null;
-
-  if (config != null) {
-    ref = config.ref === undefined ? null : config.ref;
-    if ("production" !== process.env.NODE_ENV) {
-      ("production" !== process.env.NODE_ENV ? warning(
-        config.key !== null,
-        'createElement(...): Encountered component with a `key` of null. In ' +
-        'a future version, this will be treated as equivalent to the string ' +
-        '\'null\'; instead, provide an explicit key or use undefined.'
-      ) : null);
-    }
-    // TODO: Change this back to `config.key === undefined`
-    key = config.key == null ? null : '' + config.key;
-    // Remaining properties are added to a new props object
-    for (propName in config) {
-      if (config.hasOwnProperty(propName) &&
-          !RESERVED_PROPS.hasOwnProperty(propName)) {
-        props[propName] = config[propName];
-      }
-    }
-  }
-
-  // Children can be more than one argument, and those are transferred onto
-  // the newly allocated props object.
-  var childrenLength = arguments.length - 2;
-  if (childrenLength === 1) {
-    props.children = children;
-  } else if (childrenLength > 1) {
-    var childArray = Array(childrenLength);
-    for (var i = 0; i < childrenLength; i++) {
-      childArray[i] = arguments[i + 2];
-    }
-    props.children = childArray;
-  }
-
-  // Resolve default props
-  if (type && type.defaultProps) {
-    var defaultProps = type.defaultProps;
-    for (propName in defaultProps) {
-      if (typeof props[propName] === 'undefined') {
-        props[propName] = defaultProps[propName];
-      }
-    }
-  }
-
-  return new ReactElement(
-    type,
-    key,
-    ref,
-    ReactCurrentOwner.current,
-    ReactContext.current,
-    props
-  );
-};
-
-ReactElement.createFactory = function(type) {
-  var factory = ReactElement.createElement.bind(null, type);
-  // Expose the type on the factory and the prototype so that it can be
-  // easily accessed on elements. E.g. <Foo />.type === Foo.type.
-  // This should not be named `constructor` since this may not be the function
-  // that created the element, and it may not even be a constructor.
-  factory.type = type;
-  return factory;
-};
-
-ReactElement.cloneAndReplaceProps = function(oldElement, newProps) {
-  var newElement = new ReactElement(
-    oldElement.type,
-    oldElement.key,
-    oldElement.ref,
-    oldElement._owner,
-    oldElement._context,
-    newProps
-  );
-
-  if ("production" !== process.env.NODE_ENV) {
-    // If the key on the original is valid, then the clone is valid
-    newElement._store.validated = oldElement._store.validated;
-  }
-  return newElement;
-};
-
-/**
- * @param {?object} object
- * @return {boolean} True if `object` is a valid component.
- * @final
- */
-ReactElement.isValidElement = function(object) {
-  // ReactTestUtils is often used outside of beforeEach where as React is
-  // within it. This leads to two different instances of React on the same
-  // page. To identify a element from a different React instance we use
-  // a flag instead of an instanceof check.
-  var isElement = !!(object && object._isReactElement);
-  // if (isElement && !(object instanceof ReactElement)) {
-  // This is an indicator that you're using multiple versions of React at the
-  // same time. This will screw with ownership and stuff. Fix it, please.
-  // TODO: We could possibly warn here.
-  // }
-  return isElement;
-};
-
-module.exports = ReactElement;
-
-}).call(this,require('_process'))
-},{"./ReactContext":5,"./ReactCurrentOwner":6,"./warning":12,"_process":1}],8:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -743,41 +354,7 @@ var ReactTransitionEvents = {
 
 module.exports = ReactTransitionEvents;
 
-},{"./ExecutionEnvironment":3}],9:[function(require,module,exports){
-/**
- * Copyright 2013-2014, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @providesModule emptyFunction
- */
-
-function makeEmptyFunction(arg) {
-  return function() {
-    return arg;
-  };
-}
-
-/**
- * This function accepts and discards inputs; it has no side effects. This is
- * primarily useful idiomatically for overridable function endpoints which
- * always need to be callable, since JS lacks a null-call idiom ala Cocoa.
- */
-function emptyFunction() {}
-
-emptyFunction.thatReturns = makeEmptyFunction;
-emptyFunction.thatReturnsFalse = makeEmptyFunction(false);
-emptyFunction.thatReturnsTrue = makeEmptyFunction(true);
-emptyFunction.thatReturnsNull = makeEmptyFunction(null);
-emptyFunction.thatReturnsThis = function() { return this; };
-emptyFunction.thatReturnsArgument = function(arg) { return arg; };
-
-module.exports = emptyFunction;
-
-},{}],10:[function(require,module,exports){
+},{"./ExecutionEnvironment":3}],5:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -834,92 +411,7 @@ var invariant = function(condition, format, a, b, c, d, e, f) {
 module.exports = invariant;
 
 }).call(this,require('_process'))
-},{"_process":1}],11:[function(require,module,exports){
-(function (process){
-/**
- * Copyright 2013-2014, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @providesModule onlyChild
- */
-"use strict";
-
-var ReactElement = require("./ReactElement");
-
-var invariant = require("./invariant");
-
-/**
- * Returns the first child in a collection of children and verifies that there
- * is only one child in the collection. The current implementation of this
- * function assumes that a single child gets passed without a wrapper, but the
- * purpose of this helper function is to abstract away the particular structure
- * of children.
- *
- * @param {?object} children Child collection structure.
- * @return {ReactComponent} The first and only `ReactComponent` contained in the
- * structure.
- */
-function onlyChild(children) {
-  ("production" !== process.env.NODE_ENV ? invariant(
-    ReactElement.isValidElement(children),
-    'onlyChild must be passed a children with exactly one child.'
-  ) : invariant(ReactElement.isValidElement(children)));
-  return children;
-}
-
-module.exports = onlyChild;
-
-}).call(this,require('_process'))
-},{"./ReactElement":7,"./invariant":10,"_process":1}],12:[function(require,module,exports){
-(function (process){
-/**
- * Copyright 2014, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @providesModule warning
- */
-
-"use strict";
-
-var emptyFunction = require("./emptyFunction");
-
-/**
- * Similar to invariant but only logs a warning if the condition is not met.
- * This can be used to log issues in development environments in critical
- * paths. Removing the logging code for production environments will keep the
- * same logic and follow the same code paths.
- */
-
-var warning = emptyFunction;
-
-if ("production" !== process.env.NODE_ENV) {
-  warning = function(condition, format ) {for (var args=[],$__0=2,$__1=arguments.length;$__0<$__1;$__0++) args.push(arguments[$__0]);
-    if (format === undefined) {
-      throw new Error(
-        '`warning(condition, format, ...args)` requires a warning ' +
-        'message argument'
-      );
-    }
-
-    if (!condition) {
-      var argIndex = 0;
-      console.warn('Warning: ' + format.replace(/%s/g, function()  {return args[argIndex++];}));
-    }
-  };
-}
-
-module.exports = warning;
-
-}).call(this,require('_process'))
-},{"./emptyFunction":9,"_process":1}],13:[function(require,module,exports){
+},{"_process":1}],6:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -936,7 +428,7 @@ var Backdrop = React.createClass({displayName: "Backdrop",
 });
 
 module.exports = Backdrop;
-},{"react":"react"}],14:[function(require,module,exports){
+},{"react":"react"}],7:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -989,7 +481,7 @@ var Button = React.createClass({displayName: "Button",
 });
 
 module.exports = Button;
-},{"react":"react","react-md":"react-md"}],15:[function(require,module,exports){
+},{"react":"react","react-md":"react-md"}],8:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -1024,7 +516,23 @@ var Content = React.createClass({displayName: "Content",
 });
 
 module.exports = Content;
-},{"react":"react"}],16:[function(require,module,exports){
+},{"react":"react"}],9:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+
+var React = require('react');
+
+var Divider = React.createClass({displayName: "Divider",
+    render: function() {
+        return (
+            React.createElement('md-divider', {className: 'md-default-theme'})
+        );
+    }
+});
+
+module.exports = Divider;
+},{"react":"react"}],10:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -1084,12 +592,13 @@ var Input = React.createClass({displayName: "Input",
 });
 
 module.exports = Input;
-},{"react":"react"}],17:[function(require,module,exports){
+},{"react":"react"}],11:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
 
-var React = require('react');
+var React = require('react'),
+    Divider = require('../divider/divider.jsx');
 
 var ListItem = React.createClass({displayName: "ListItem",
     getDefaultProps: function() {
@@ -1103,14 +612,14 @@ var ListItem = React.createClass({displayName: "ListItem",
         return (
             React.createElement('md-item', {className: this.props.className}, 
                 React.createElement('md-item-content', {}, this.props.children),
-                this.props.divider ? React.createElement('md-divider', {className: 'md-default-theme'}) : null
+                this.props.divider ? React.createElement(Divider, null) : null
             )
         );
     }
 });
 
 module.exports = ListItem;
-},{"react":"react"}],18:[function(require,module,exports){
+},{"../divider/divider.jsx":9,"react":"react"}],12:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -1133,7 +642,7 @@ var List = React.createClass({displayName: "List",
 });
 
 module.exports = List;
-},{"react":"react"}],19:[function(require,module,exports){
+},{"react":"react"}],13:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -1221,7 +730,101 @@ var Sidenav = React.createClass({displayName: "Sidenav",
 });
 
 module.exports = Sidenav;
-},{"../../mixins/classTransitions.jsx":22,"../backdrop/backdrop.jsx":13,"react":"react"}],20:[function(require,module,exports){
+},{"../../mixins/classTransitions.jsx":18,"../backdrop/backdrop.jsx":6,"react":"react"}],14:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+
+var React = require('react'),
+    Anim = React.addons.CSSTransitionGroup,
+    Button = require('../button/button.jsx');
+
+var Toast = React.createClass({displayName: "Toast",
+    propTypes: {
+        verticalPosition: React.PropTypes.oneOf(['top', 'bottom']),
+        horizontalPosition: React.PropTypes.oneOf(['left', 'right']),
+        content: React.PropTypes.string,
+        action: React.PropTypes.string,
+        capsule: React.PropTypes.bool
+    },
+    
+    getDefaultProps: function() {
+        return {
+            content: '',
+            action: '',
+            capsule: false,
+            verticalPosition: 'top',
+            horizontalPosition: 'right',
+        };
+    },
+    
+    render: function () {
+        var className = React.addons.classSet({
+            'md-default-theme' : true,
+            'md-capsule' : this.props.capsule,
+            'md-left' : this.props.horizontalPosition == 'left',
+            'md-right' : this.props.horizontalPosition == 'right',
+            'md-top' : this.props.verticalPosition == 'top',
+            'md-bottom' : this.props.verticalPosition == 'bottom',
+        });
+        return React.createElement('md-toast', {className: className},
+            React.createElement("span", {flex: true}, this.props.content),
+            this.props.action ? React.createElement(Button, null, this.props.action) : false
+        );
+    }
+});
+
+var count = 0;
+
+var ToastContainerMixin = {
+    childContextTypes: {
+        toaster: React.PropTypes.func.isRequired
+    },
+    
+    getChildContext: function () {
+        return {
+            toaster: this.addToast
+        };
+    },
+    
+    getInitialState: function () {
+        return {
+            toast: false,
+        };
+    },
+
+    addToast: function (content) {
+        this.setState({
+            toast: (
+                React.createElement(Anim, {transitionName: "ng"}, 
+                    React.createElement(Toast, {key: ++count, content: content})
+                )
+            )
+        });
+    },
+};
+
+module.exports = ToastContainerMixin;
+},{"../button/button.jsx":7,"react":"react"}],15:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+
+var React = require('react');
+    
+var ToastMixin = {
+    
+    contextTypes: {
+        toaster: React.PropTypes.func.isRequired
+    },
+  
+    toast: function () {
+        this.context.toaster('test');
+    }
+};
+
+module.exports = ToastMixin;
+},{"react":"react"}],16:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -1253,7 +856,7 @@ var Toolbar = React.createClass({displayName: "Toolbar",
 });
 
 module.exports = Toolbar;
-},{"react":"react"}],21:[function(require,module,exports){
+},{"react":"react"}],17:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -1282,7 +885,7 @@ var Whiteframe = React.createClass({displayName: "Whiteframe",
 });
 
 module.exports = Whiteframe;
-},{"react":"react"}],22:[function(require,module,exports){
+},{"react":"react"}],18:[function(require,module,exports){
 /**
  * This code is deeply inspired from the ReactCSSTransitionGroupChild from 
  * https://github.com/facebook/react
@@ -1296,8 +899,6 @@ var React = require('react');
 
 var CSSCore = require('react/lib/CSSCore');
 var ReactTransitionEvents = require('react/lib/ReactTransitionEvents');
-
-var onlyChild = require('react/lib/onlyChild');
 
 var TICK = 17;
 
@@ -1374,16 +975,21 @@ var ClassTransitions = {
 };
 
 module.exports = ClassTransitions;
-},{"react":"react","react/lib/CSSCore":2,"react/lib/ReactTransitionEvents":8,"react/lib/onlyChild":11}],"react-md":[function(require,module,exports){
+},{"react":"react","react/lib/CSSCore":2,"react/lib/ReactTransitionEvents":4}],"react-md":[function(require,module,exports){
 module.exports = {
     Backdrop        : require('./src/components/backdrop/backdrop.jsx'),
     Button          : require('./src/components/button/button.jsx'),
     Content         : require('./src/components/content/content.jsx'),
+    Divider         : require('./src/components/divider/divider.jsx'),
     Input           : require('./src/components/input/input.jsx'),
     List            : require('./src/components/list/list.jsx'),
     ListItem        : require('./src/components/list-item/list-item.jsx'),
     Sidenav         : require('./src/components/sidenav/sidenav.jsx'),
     Toolbar         : require('./src/components/toolbar/toolbar.jsx'),
     Whiteframe      : require('./src/components/whiteframe/whiteframe.jsx'),
+    
+    
+    ToastContainerMixin  : require('./src/components/toast/toast-container-mixin.jsx'),
+    ToastMixin      : require('./src/components/toast/toast-mixin.jsx'),
 };
-},{"./src/components/backdrop/backdrop.jsx":13,"./src/components/button/button.jsx":14,"./src/components/content/content.jsx":15,"./src/components/input/input.jsx":16,"./src/components/list-item/list-item.jsx":17,"./src/components/list/list.jsx":18,"./src/components/sidenav/sidenav.jsx":19,"./src/components/toolbar/toolbar.jsx":20,"./src/components/whiteframe/whiteframe.jsx":21}]},{},[]);
+},{"./src/components/backdrop/backdrop.jsx":6,"./src/components/button/button.jsx":7,"./src/components/content/content.jsx":8,"./src/components/divider/divider.jsx":9,"./src/components/input/input.jsx":10,"./src/components/list-item/list-item.jsx":11,"./src/components/list/list.jsx":12,"./src/components/sidenav/sidenav.jsx":13,"./src/components/toast/toast-container-mixin.jsx":14,"./src/components/toast/toast-mixin.jsx":15,"./src/components/toolbar/toolbar.jsx":16,"./src/components/whiteframe/whiteframe.jsx":17}]},{},[]);

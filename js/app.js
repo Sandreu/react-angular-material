@@ -63,7 +63,7 @@ var React = require('react'),
     Demo = require('react-md-demo');
 
 var Layout = React.createClass({displayName: "Layout",
-    mixins: [Router.Navigation, Router.State],
+    mixins: [Router.State],
     
     render: function () {
         var Menu = Demo.map(function (item, i) {
@@ -73,7 +73,7 @@ var Layout = React.createClass({displayName: "Layout",
         var title = this.getPathname().replace('/', '').replace('.', ' > ');
         
         return (
-            React.createElement("div", {layout: "column"}, 
+            React.createElement("div", {layout: "column", layoutAlign: "space-around"}, 
                 React.createElement(Md.Toolbar, {className: "md-tall", zDepth: 2, style: {zIndex:1}}, 
                     React.createElement("span", {flex: true}), 
                     React.createElement("h1", {className: "md-toolbar-tools md-toolbar-tools-bottom"}, "React MD")
@@ -85,14 +85,15 @@ var Layout = React.createClass({displayName: "Layout",
                         )
                     ), 
                     
-                    React.createElement(Md.Whiteframe, {layoutFill: true, className: "demo-container", style: {margin:'-85px 0 20px 0', zIndex:2}}, 
+                    React.createElement(Md.Whiteframe, {layoutFill: true, className: "demo-container", style: {margin:'-64px 0 20px 0', zIndex:2}}, 
                         React.createElement(Md.Content, {layout: "column"}, 
                             React.createElement(Md.Toolbar, {className: "main-toolbar"}, 
                                 React.createElement("h2", {className: "md-toolbar-tools"}, 
                                     React.createElement("span", null, title)
                                 )
                             ), 
-                            React.createElement(Md.Content, {style: { overflow: 'hidden', minHeight: '300px'}}, 
+                            React.createElement(Md.Divider, null), 
+                            React.createElement(Md.Content, {style: { overflow: 'hidden', minHeight: '300px'}, layout: "row"}, 
                                 React.createElement(RouteHandler, null)
                             )
                         )
