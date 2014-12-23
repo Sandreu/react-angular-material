@@ -11,7 +11,7 @@ var WhiteframeDemo = React.createClass({
         
         for (var i=1 ; i<=5 ; ++i) {
             demos.push(
-                <Md.Whiteframe zDepth={i} style={{margin: '0 50px 30px 50px', padding: '20px'}}>
+                <Md.Whiteframe key={i} zDepth={i} style={{margin: '30px 50px', padding: '20px'}}>
                     <p>zDepth={'{' + i + '}'}</p>
                 </Md.Whiteframe>
             );
