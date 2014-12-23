@@ -9,4 +9,8 @@ module.exports = {
     Sidenav         : require('./src/components/sidenav/sidenav.jsx'),
     Toolbar         : require('./src/components/toolbar/toolbar.jsx'),
     Whiteframe      : require('./src/components/whiteframe/whiteframe.jsx'),
+    
+    
+    ToastContainerMixin  : require('./src/components/toast/toast-container-mixin.jsx'),
+    ToastMixin      : require('./src/components/toast/toast-mixin.jsx'),
 };

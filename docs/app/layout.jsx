@@ -10,7 +10,7 @@ var React = require('react'),
     Demo = require('react-md-demo');
 
 var Layout = React.createClass({
-    mixins: [Router.Navigation, Router.State],
+    mixins: [Router.State],
     
     render: function () {
         var Menu = Demo.map(function (item, i) {
@@ -20,7 +20,7 @@ var Layout = React.createClass({
         var title = this.getPathname().replace('/', '').replace('.', ' > ');
         
         return (
-            <div layout="column">
+            <div layout="column" layoutAlign="space-around">
                 <Md.Toolbar className="md-tall" zDepth={2} style={{zIndex:1}}>
                     <span flex />
                     <h1 className="md-toolbar-tools md-toolbar-tools-bottom">React MD</h1>
@@ -40,7 +40,7 @@ var Layout = React.createClass({
                                 </h2>
                             </Md.Toolbar>
                             <Md.Divider />
-                            <Md.Content style={{ overflow: 'hidden', minHeight: '300px' }}>
+                            <Md.Content style={{ overflow: 'hidden', minHeight: '300px' }} layout="row">
                                 <RouteHandler/>
                             </Md.Content>
                         </Md.Content>
