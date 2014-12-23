@@ -17,11 +17,7 @@ var Sidenav = React.createClass({
         lockOpen: React.PropTypes.bool,
         openOnStartup: React.PropTypes.bool,
         zDepth: React.PropTypes.number,
-        side: function(props, propName, componentName) {
-            if (!/left|right/.test(props[propName])) {
-                return new Error('Nav side is left or right only !');
-            }
-        }
+        side: React.PropTypes.oneOf(['left', 'right'])
     },
     
     getDefaultProps: function() {
