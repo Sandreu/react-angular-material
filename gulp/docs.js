@@ -31,6 +31,10 @@ module.exports = function(gulp) {
         }
         
         return bundle.bundle()
+            .on('error', function(err){
+                console.log(err.message);
+                this.emit('end');
+            })
             .pipe( source('dist.js') )
             .pipe( gulp.dest("docs/js") );
     });
@@ -51,6 +55,10 @@ module.exports = function(gulp) {
         }
         
         return bundle.bundle()
+            .on('error', function(err){
+                console.log(err.message);
+                this.emit('end');
+            })
             .pipe( source('app.js') )
             .pipe( gulp.dest("docs/js") );
     });
@@ -87,6 +95,10 @@ module.exports = function(gulp) {
                 
                 stream.on('end', function () {
                     bundle.bundle()
+            .on('error', function(err){
+                console.log(err.message);
+                this.emit('end');
+            })
                         .pipe( source('demo.js') )
                         .pipe( gulp.dest("docs/js") )
                         .on('end', function () {
@@ -112,6 +124,10 @@ module.exports = function(gulp) {
         bundle.require('./src/vendor-exposes.js', { expose: 'vendor-exposes' });
         
         return bundle.bundle()
+            .on('error', function(err){
+                console.log(err.message);
+                this.emit('end');
+            })
             .pipe( source('vendors.js') )
             .pipe( gulp.dest("docs/js") );
     });
