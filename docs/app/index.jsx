@@ -4,6 +4,7 @@
  
 var DOMProps = require('vendor-exposes').HTMLDOMPropertyConfig;
     
+DOMProps.Properties.hide = null;
 DOMProps.Properties.layout = null;
 DOMProps.Properties.flex = null;
 DOMProps.Properties['layoutPadding'] = null;

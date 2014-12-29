@@ -11,6 +11,7 @@ module.exports = {
     Whiteframe      : require('./src/components/whiteframe/whiteframe.jsx'),
     
     
+    DialogMixin          : require('./src/components/dialog/dialog-mixin.jsx'),
     ToastContainerMixin  : require('./src/components/toast/toast-container-mixin.jsx'),
-    ToastMixin      : require('./src/components/toast/toast-mixin.jsx'),
+    ToastMixin           : require('./src/components/toast/toast-mixin.jsx'),
 };
