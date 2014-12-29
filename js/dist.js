@@ -521,6 +521,111 @@ module.exports = Content;
  * @jsx React.DOM
  */
 
+var React = require('react'),
+    Anim = React.addons.CSSTransitionGroup,
+    CSSCore = require('react/lib/CSSCore'),
+    
+    Button = require('../button/button.jsx'),
+    Backdrop = require('../backdrop/backdrop.jsx');
+    
+var Dialog = React.createClass({displayName: "Dialog",
+    
+    propTypes: {
+        mdOnRequestClose: React.PropTypes.func.isRequired,
+        mdSource: React.PropTypes.node
+    },
+    
+    outboundsClick: function (evt) {
+        if (CSSCore.hasClass(evt.target, 'md-dialog-container')) {
+            this.props.mdOnRequestClose();
+        }
+    },
+    
+    render: function () {
+        var actions = [];
+        actions.push(React.createElement(Button, {key: 0}, "OK"));
+        return (
+            React.createElement("div", {className: "md-dialog-container", onClick: this.outboundsClick}, 
+                React.createElement('md-dialog', {className:'md-default-theme transition-in'},
+                    React.createElement('md-content', {className:'md-default-theme'},
+                        this.props.mdTitle ? React.createElement("h2", null, this.props.mdTitle) : false,
+                        this.props.mdContent
+                    ),
+                    actions.length > 0 ? React.createElement("div", {className: "md-actions"}, actions) : false
+                )
+            )
+        );
+    }
+});
+
+var DialogContainer = React.createClass({displayName: "DialogContainer",
+    propTypes: {
+        mdDialog: React.PropTypes.oneOfType([
+            React.PropTypes.element,
+            React.PropTypes.bool
+        ])
+    },
+    
+    getDefaultProps: function() {
+        return {
+            mdDialog: false
+        };
+    },
+    
+    render: function () {
+        return (
+            React.createElement("div", null, 
+                React.createElement(Anim, {transitionName: "ng"}, 
+                    this.props.mdDialog ? React.createElement(Backdrop, {key: "backdrop", className: "md-dialog-backdrop md-opaque"}) : false
+                ), 
+                this.props.mdDialog
+            )
+        )
+    }
+});
+
+var rootDialogContainer = false;
+
+var DialogMixin = {
+    _container: false,
+    
+    contextTypes: {
+        dialogContainer: React.PropTypes.instanceOf(DialogContainer)
+    },
+  
+    componentDidMount: function () {
+        if (this.context.dialogContainer) this._container = this.context.dialogContainer;
+        else {
+            if (!rootDialogContainer) {
+                var element = React.createElement(DialogContainer, null);
+                var node = document.createElement('div');
+                document.body.appendChild(node);
+                rootDialogContainer = React.render(element, node);
+            }
+            this._container = rootDialogContainer;
+        }
+    },
+    
+    closeDialog: function () {
+        this._container.setProps({
+            mdDialog: false
+        });
+    },
+    
+    dialog: function (props, event) {
+        var dialog = React.createElement(Dialog, React.__spread({},  props, {mdOnRequestClose: this.closeDialog, mdSource: event.target}));
+        this._container.setProps({
+            mdDialog: dialog
+        });
+    }
+};
+
+module.exports = DialogMixin;
+},{"../backdrop/backdrop.jsx":6,"../button/button.jsx":7,"react":"react","react/lib/CSSCore":2}],10:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+
 var React = require('react');
 
 var Divider = React.createClass({displayName: "Divider",
@@ -532,7 +637,7 @@ var Divider = React.createClass({displayName: "Divider",
 });
 
 module.exports = Divider;
-},{"react":"react"}],10:[function(require,module,exports){
+},{"react":"react"}],11:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -592,7 +697,7 @@ var Input = React.createClass({displayName: "Input",
 });
 
 module.exports = Input;
-},{"react":"react"}],11:[function(require,module,exports){
+},{"react":"react"}],12:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -621,7 +726,7 @@ var ListItem = React.createClass({displayName: "ListItem",
 });
 
 module.exports = ListItem;
-},{"../divider/divider.jsx":9,"react":"react"}],12:[function(require,module,exports){
+},{"../divider/divider.jsx":10,"react":"react"}],13:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -644,7 +749,7 @@ var List = React.createClass({displayName: "List",
 });
 
 module.exports = List;
-},{"react":"react"}],13:[function(require,module,exports){
+},{"react":"react"}],14:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -728,7 +833,7 @@ var Sidenav = React.createClass({displayName: "Sidenav",
 });
 
 module.exports = Sidenav;
-},{"../../mixins/classTransitions.jsx":18,"../backdrop/backdrop.jsx":6,"react":"react"}],14:[function(require,module,exports){
+},{"../../mixins/classTransitions.jsx":19,"../backdrop/backdrop.jsx":6,"react":"react"}],15:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -819,7 +924,7 @@ var ToastContainerMixin = {
 };
 
 module.exports = ToastContainerMixin;
-},{"../button/button.jsx":7,"react":"react"}],15:[function(require,module,exports){
+},{"../button/button.jsx":7,"react":"react"}],16:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -838,7 +943,7 @@ var ToastMixin = {
 };
 
 module.exports = ToastMixin;
-},{"react":"react"}],16:[function(require,module,exports){
+},{"react":"react"}],17:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -870,7 +975,7 @@ var Toolbar = React.createClass({displayName: "Toolbar",
 });
 
 module.exports = Toolbar;
-},{"react":"react"}],17:[function(require,module,exports){
+},{"react":"react"}],18:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -899,7 +1004,7 @@ var Whiteframe = React.createClass({displayName: "Whiteframe",
 });
 
 module.exports = Whiteframe;
-},{"react":"react"}],18:[function(require,module,exports){
+},{"react":"react"}],19:[function(require,module,exports){
 /**
  * This code is deeply inspired from the ReactCSSTransitionGroupChild from 
  * https://github.com/facebook/react
@@ -1003,7 +1108,8 @@ module.exports = {
     Whiteframe      : require('./src/components/whiteframe/whiteframe.jsx'),
     
     
+    DialogMixin          : require('./src/components/dialog/dialog-mixin.jsx'),
     ToastContainerMixin  : require('./src/components/toast/toast-container-mixin.jsx'),
-    ToastMixin      : require('./src/components/toast/toast-mixin.jsx'),
+    ToastMixin           : require('./src/components/toast/toast-mixin.jsx'),
 };
-},{"./src/components/backdrop/backdrop.jsx":6,"./src/components/button/button.jsx":7,"./src/components/content/content.jsx":8,"./src/components/divider/divider.jsx":9,"./src/components/input/input.jsx":10,"./src/components/list-item/list-item.jsx":11,"./src/components/list/list.jsx":12,"./src/components/sidenav/sidenav.jsx":13,"./src/components/toast/toast-container-mixin.jsx":14,"./src/components/toast/toast-mixin.jsx":15,"./src/components/toolbar/toolbar.jsx":16,"./src/components/whiteframe/whiteframe.jsx":17}]},{},[]);
+},{"./src/components/backdrop/backdrop.jsx":6,"./src/components/button/button.jsx":7,"./src/components/content/content.jsx":8,"./src/components/dialog/dialog-mixin.jsx":9,"./src/components/divider/divider.jsx":10,"./src/components/input/input.jsx":11,"./src/components/list-item/list-item.jsx":12,"./src/components/list/list.jsx":13,"./src/components/sidenav/sidenav.jsx":14,"./src/components/toast/toast-container-mixin.jsx":15,"./src/components/toast/toast-mixin.jsx":16,"./src/components/toolbar/toolbar.jsx":17,"./src/components/whiteframe/whiteframe.jsx":18}]},{},[]);
